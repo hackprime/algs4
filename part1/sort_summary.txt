@@ -1,0 +1,79 @@
+selection sort
+- inplace: YES
+- stable: YES
+- worst case: 1/2 N^2
+- average case: 1/2 N^2
+- best case: 1/2 N^2
++ always N exchanges
+
+
+insertion sort
+- inplace: YES
+- stable: YES
+- worst case: 1/2 N^2
+- average case: 1/4 N^2
+- best case: N
++ use for small N or partially ordered
+
+
+shellsort
+- inplace: YES
+- stable: NO
+- worst case: ?
+- average case: ?
+- best case: N
++ tight code, subquadratic
+
+
+mergesort
+- inplace: NO
+- stable: YES
+- worst case: N log N
+- average case: N log N
+- best case: N log N
+- number of compares:
+    reverse sorted array   - N log N
+    partially sorted array - N log N
+    sorted array           - 1/2 N log N
++ N log N guarantee, stable
+
+
+quicksort
+- inplace: YES
+- stable: NO
+- worst case: 1/2 N^2 (very rare)
+- average case: 2 N log N
+- best case: N log N
+- number of compares:
+    reverse sorted array   - N lg N
+    partially sorted array -
+    sorted array           -
+- number of compares without shuffling:
+    sorted array           - N^2 (without shuffling)
+- number of exchanges:
+    average case           ~ 1/3 N log N
++ N log N probabilistic guarantee, fastest in practice
+
+
+3 way quicksort
+- inplace: YES
+- stable: NO
+- worst case: 1/2 N^2 (very rare)
+- average case: 2 N log N
+- best case: N
+    if there are no items with equal keys -- offers no adventage over the standard version
++ impove quicksort in presence of duplicate keys
+
+
+heapsort
+- inplace: YES
+- stable: NO
+- worst case: 2 N log N
+- average case: 2 N log N
+- best case: N log N
++ N log N guarantee, in-place
+
+
+
+* inplace algorythm: - algorythm which using a data structer
+                       with small constant amount of extra memory.

@@ -1,0 +1,10 @@
+Turing and Church - functional programming
+
+The bounds of selection -- Manuel Blum, Robert W. Floyd, Vaughman Pratt etc.
+https://people.csail.mit.edu/rivest/pubs/BFPRT73.pdf
+
+Engineering a Sort Function -- John N. Bentley, M.Douglas McIlroy
+http://cs.fit.edu/~pkc/classes/writing/samples/bentley93engineering.pdf
+
+How Tall is a Tree? -- Bruce Reed
+http://dl.acm.org/citation.cfm?id=335360&dl=ACM&coll=DL&CFID=527472238&CFTOKEN=34348188

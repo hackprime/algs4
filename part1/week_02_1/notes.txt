@@ -1,0 +1,168 @@
+3.1 STACKS
+
+stack = FIFO
+
+stack implementation 1: linked list
+    - maintain pointer to first item in linked list
+    - 'first' means 'last added' (revesed order)
+    - each element contains pointer to next
+    - pop: 1) save first element 2) first = first.next 3) return saved first element
+    - push: 1) save link to first 2) create new item 3) point him to old firs 4) change list first item link to new first item
+
+stack implementation 2: array
+    - use array of N to store stack elements
+    - pop: remove and return last element of array
+    - push: append element to the array
+    ~ problem: STACK OVERFLOWS after size = N-1
+
+arr[N++] - access the array, then do increment
+arr[--N] - do decrement, then access the array
+
+~loitering [бездельничанье] -
+loitering - Java problem - leave seized a memory that we do not actually use, e.g. not null elements after pop(). Need to free them 'arr[N] = null'.
+
+
+
+3.2 RESIZING ANALISYS
+
+just resize the array is too expansive -- T(N) ~ N^2
+so we need ensure that array expanding takes a constant time:
+PUSH: How to grow array? --- If array is full, create a new arry of twice the size, and copy items
+this is REPEATING DOUBLING
+POP: halve size of array when array is half-full
+
+~tradeoff [обмен]
+~amortize [погашать в рассрочку, амартизировать]
+
+
+
+3.3 QUEUE
+
+~briefly [коротко]
+stack implementation 1: linked list
+stack implementation 2: array
+
+
+
+3.4 GENERICS
+
+~tedious [нудный]
+~[smth]-prone [предрасположенный к чему-то] eg error-prone - подверженный ошибкам
+
+
+
+3.5 ITERATORS
+
+~shorthand ~быстро писать~
+~longhand ~долго писать~
+Bag = Queue without dequeue = Stack withot pop
+Only add the item and iterate over them
+ORDER DOES NOT MATTER
+
+
+
+3.6 STACK AND QUEUE APPLICATIONS
+
+~bloated [раздутый, чрезмерный]
+Greatest common divisor (denominator) - Наибольший общий делитель
+
+def gcd(p, q):
+    if q == 0:
+        return p
+    return q, p % q
+
+
+
+
+EXERCISE 1
+
+(seed = 486703)
+Suppose that an intermixed sequence of 10 push and 10 pop operations are performed
+on a LIFO stack. The pushes push the letters 0 through 9 in order; the pops
+print out the return value. Which of the following output sequence(s) could occur?
+Check all that apply.
+Your Answer     Score   Explanation
+
+6 5 4 3 2 1 0 7 8 9
+Correct 0.20    0 1 2 3 4 5 6 - - - - - - - 7 - 8 - 9 -
+
+0 3 2 1 4 5 8 7 6 9
+Correct 0.20    0 - 1 2 3 - - - 4 - 5 - 6 7 8 - - - 9 -
+
+0 3 2 1 6 8 5 7 4 9
+Correct 0.20    When 8 is pushed, both 5 and 7 are still on the stack. So, 7 would be popped before 5.
+
+1 2 3 5 0 7 6 9 8 4
+Correct 0.20    When 5 is pushed, both 0 and 4 are still on the stack. So, 4 would be popped before 0.
+
+0 4 5 3 7 9 8 6 2 1
+Correct 0.20    0 - 1 2 3 4 - 5 - - 6 7 - 8 9 - - - - -
+Total       1.00 / 1.00
+Question Explanation
+
+
+
+EXERCISE 2
+
+(seed = 366119)
+Suppose that an intermixed sequence of 10 enqueue and 10 dequeue operations are performed
+on a FIFO queue. The enqueues add the letters 0 through 9 in order; the dequeues
+print out the return value. Which of the following output sequence(s) could occur?
+Check all that apply.
+Your Answer     Score   Explanation
+
+0 1 2 3 4 5 8 7 9 6
+Correct 0.20    The seventh item enqueued is 6 but the seventh item dequeued is 8.
+
+0 1 2 3 4 5 6 7 8 9
+Correct 0.20    0 - 1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9 -
+
+8 2 3 9 0 4 5 6 1 7
+Correct 0.20    The first item enqueued is 0 but the first item dequeued is 8.
+
+0 1 2 3 4 5 6 7 9 8
+Correct 0.20    The ninth item enqueued is 8 but the ninth item dequeued is 9.
+
+2 8 7 3 6 5 9 0 4 1
+Correct 0.20    The first item enqueued is 0 but the first item dequeued is 2.
+Total       1.00 / 1.00
+Question Explanation
+
+
+
+EXERCISE 3
+
+(seed = 977630)
+Consider an object of type MysteryBox that stores N items of type int
+in an array item[] of length N.
+
+    public class MysteryBox {
+        private int N;
+        private int[] items;
+
+        ...
+    }
+
+Using the 64-bit memory cost model from the lecture, how many bytes does it use as a function of N?
+Include all memory referenced by the object and use tilde notation to simplify your answer.
+For example, enter ~ 4N if the number of bytes as a function of N is 4N + 32.
+Answer for Question 3
+You entered:
+
+Your Answer     Score   Explanation
+~ 4N    Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+A correct answer matches the regular expression: \s*~?\s*4\s*N\s*
+For example, the following is a correct answer: ~ 4N
+Below is a detailed accounting:
+
+public class MysteryBox {                     //       16 (object overhead)
+    private int N;                            //        4 (int)
+    private int[] items;                      //        8 (reference to array)
+                                              //  4N + 24 (array of int)
+    ...                                                 4 (padding to round up to a multiple of 8)
+}                                                 -------
+                                                  4N + 56
+

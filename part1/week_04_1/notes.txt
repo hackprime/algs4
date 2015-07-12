@@ -1,0 +1,357 @@
+7.1 PRIORITY QUEUES: APIS AND ELEMENTARY IMPLEMENTATIONS
+
+idea of priority queue: remove the largest (or smallest) item.
+
+~collide [сталктваться]
+~generalize [обобщать]
+
+challange: find the largest M items in a stream of N items
+
+How to find the largest M?
+                    time complexity:    space complexity:
+sort                 N log N            N
+elementary PQ        N M                M
+binary heap          N log M            M
+------------------------------------------------------------
+best in theory       N                  M
+
+
+order of grow of running time for priority queus with N items
+
+implementation    inserts    del max    max
+----------------------------------------------
+unordered array   1          N          N
+ordered array     N          1          1
+goal              log N      log N      log N
+------------------------------------------------
+binary heap       log N      log N      1       (!!!)
+
+
+
+7.2 BINARY HEAPS
+
+binary tree: either empty or node with links to left and right binary trees.
+complete tree: perfectly balanced except for bottom level.
+height of complete tree with N nodes is log N
+    height only increases if N is a power of 2
+
+heap ordered binary tree:
+- keys in nodes
+- parent's key no smaller than children's keys
+~no smaller than [не менее чем]
+
+Array representation of binary heap:
+- indecis start at 1
+- take nodes in level order
+- no explicit links needed
+
+Largest key is a[1] which is root of binary tree.
+
+Can use array indeces to move through tree
+- parent of node at k is k/2
+- children of node at k are at 2k and 2k+1
+
+IF child's key become larger them parent's one:
+- exchange parent's key and child'key
+- repeat until heap order restored
+
+Peter principal: Node promoted to level of incompetence
+
+heap.INSERT:
+- at most (1 + log N) compares
+
+IF parent's key become smaller than one or both of its children:
+- exchange key in parent with key in larger child
+- repeat until heap order restored
+
+jeap.DELETE_MAX:
+- at most 2 log N compares
+
+~assumption [принятие на себя (обязанностей), вступление (в должность)]
+
+Consideretions:
+    Immutibility of keys:
+    - assumption: clien does not change keys while they are on the pq:
+    - best practice: use immutible keys
+
+~arbitrary [произвольный случайный]
+
+
+
+7.3 HEAPSORT
+
+plan for inplace sort:
+- create max-heap with N keys
+- repeatedly remove the maximum key
+
+! heap construction uses <= 2 N compares and exchanges
+! heapsort uses 2 N lg N compares and exchanges
+
+~significance [смысл, значение]
+
+Significance: in-place sorting algorythm with N log N worst-case
+- mergesort: no, linear extra space
+- quicksort: quadratic time in worst case (possible but not practical)
+- heapsort: yes!
+
+HEAPSORT is optimal for both time and space, but:
+- inner loop longer than quicksort's
+- makes poor use cache memory
+- NOT STABLE
+
+
+
+7.4 EVENT-DRIVEN SIMULATION
+
+~diffusion [распространение]
+~velocity [ускорение]
+~intervene [вмешиваться]
+~impending [надвигающийся]
+~invalidate [делать недействительным]
+
+
+
+EXCERSICE 1
+
+(seed = 230905)
+Give the sequence of the 13 keys in the array that results after inserting the sequence of 3 keys
+
+    80 38 85
+
+into the following maximum-oriented binary heap of size 10:
+
+    97 60 51 42 47 16 26 22 28 35
+Answer for Question 1
+You entered:
+
+Your Answer     Score   Explanation
+97 80 85 42 60 51 26 22 28 35 47 16 38  Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+The correct answer is: 97 80 85 42 60 51 26 22 28 35 47 16 38
+
+Here is the sequence of keys in the array after each insertion:
+
+    97 60 51 42 47 16 26 22 28 35
+80: 97 80 51 42 60 16 26 22 28 35 47
+38: 97 80 51 42 60 38 26 22 28 35 47 16
+85: 97 80 85 42 60 51 26 22 28 35 47 16 38
+
+
+
+EXCERSICE 2
+
+(seed = 693615)
+Give the sequence of the 7 keys in the array that results after performing 3 successive delete-the-max
+operations on the following maximum-oriented binary heap of size 10:
+
+    99 57 88 39 46 27 50 20 31 34
+Answer for Question 2
+You entered:
+
+Your Answer     Score   Explanation
+50 46 34 39 31 27 20    Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+The correct answer is: 50 46 34 39 31 27 20
+
+Here is the sequence of keys in the array after each deletion:
+
+                99 57 88 39 46 27 50 20 31 34
+[ 99 deleted ]  88 57 50 39 46 27 34 20 31
+[ 88 deleted ]  57 46 50 39 31 27 34 20
+[ 57 deleted ]  50 46 34 39 31 27 20
+
+
+
+EXCERSICE 3
+
+(seed = 132298)
+Which of the following statements about priority queues are true? Check all that apply. Unless otherwise specified, assume that the binary heap implementation is the one from lecture (e.g., max-oriented and using 1-based indexing).
+
+Your Answer     Score   Explanation
+
+[V] Let a[] be an array in which a[1] > a[2] > ... > a[N] (and a[0] is empty). Then a[] is a binary heap.
+Correct 0.20    A reverse-sorted array obeys heap order.
+
+[V] Let a[] be a binary heap that contains the N distinct integers 1, 2, ..., N. Then, key N must be in a[1] and key N-1 must be in either a[2] or a[3].
+Correct 0.20    Key N must be in the root (a[1]). Key N-1 must be in either the left or right child of the root (a[2] or a[3]).
+
+[X] A programmer might prefer heapsort to mergesort because heapsort is stable.
+Correct 0.20    Heapsort is not stable; mergesort is stable.
+
+[X] A programmer might prefer heapsort to mergesort because heapsort uses fewer compares in the worst case.
+Correct 0.20    Mergesort takes ~ N lg N compares in the worst case; heapsort takes ~ 2 N lg N compares in the worst case.
+
+[V] Given two binary heaps, each of size N, any algorithm for constructing a single binary heap containing all 2N keys requires a linearithmic number of compares (or worse).
+Inorrect    0.00    We can construct a heap in linear time - ignore the order of the keys in the two heaps and use the bottom-up heap construction algorithm.
+Total       0.80 / 1.00
+
+
+
+[V] The number of compares to insert N distinct keys in descending order into an initially empty binary heap is ~ N.
+Correct 0.20    Each insert operation (other than the first) takes 1 compare and 0 exchanges.
+
+[X] In the best case, The number of compares to heapsort an array of N distinct keys is linear.
+Correct 0.20    The best case running time of heapsort is ~ N lg N when the N keys are distinct. Proving this fact is not easy.
+
+[V] Let a[] be a binary heap that contains the N distinct integers 1, 2, ..., N. Then, key N must be in a[1] and N-2 must be in either a[2], a[3], a[4], a[5], a[6], or a[7].
+Correct 0.20    Key N must be in root (a[1]). Key N-1 must be in either the left or right child of the root (a[2] or a[3]). Key N-2 must be in either a child of the root (a[2] or a[3]) or a child of key N-1 (a[4], a[5], a[6], or a[7].
+
+[V] In the best case, inserting a key into a binary heap containing N keys takes only 1 compare.
+Correct 0.20    If the key is smaller than any key in the heap, the swim operation takes only 1 compare and 0 exchanges.
+
+[X] The main reason to implement a heap-ordered complete binary tree using nodes (with explicit pointers) instead of an array is to get logarithmic performance in the worst case for insert and delete-the-maximum (instead of an amortized bound).
+Inorrect    0.00
+
+
+
+Your Answer     Score   Explanation
+
+[X] Let a[] be a binary heap that contains the N >= 100 distinct integers 1, 2, ..., N. Then, key 2 can be in any one of a[ceiling(N/2)] through a[N].
+Inorrect    0.00    The nodes a[ceiling(N/2)] through a[N] have either 0 or 1 children.
+
+[X] When heapsorting an array of N distinct keys, there is at most one compare between the two keys x and y.
+Correct 0.20    Consider the array { -, 2, 1, 0 }. In the heap construction phase, the two keys 0 and 1 are compared with each other (when sinking 2). In the sortdown phase, the keys 0 and 1 are compared with each other when deleting 2.
+
+[V] The number of internal nodes (nodes with 2 children) in a binary heap containing N keys is ~ 1/2 N.
+Correct 0.20    Every time you add 2 nodes, it increases the number of leaves (nodes with 0 children) by 1, so there are ~ 1/2 N leaf nodes. There is at most one node that has only 1 child.
+
+[V] A 3-heap is an array representation (using 1-based indexing) of a complete 3-way tree, where the key in each node is greater than (or equal to) its children's keys. The maximum number of compares to delete the maximum key from a 3-heap containing N keys is ~ 2 log_3 N.
+Inorrect    0.00    The height is ~ log_3 N. In the worst case, three compares are needed for every node on a path from the root node to a leaf node.
+
+[V] The height of a complete 4-way tree (each node has 4 children) with N nodes is exactly floor(log_4 N).
+Inorrect    0.00    The height is ~ log_4 N but not exactly floor(log_4 N). For example, a complete 4-way tree on 10 nodes has height 2 but log_4 10 = 1.66.
+
+
+Your Answer     Score   Explanation
+
+[X] Let a[] be a binary heap that contains the N >= 100 distinct integers 1, 2, ..., N. Then, key 2 must be in one of a[ceiling(N/2)] through a[N].
+Inorrect    0.00    Key 2 cannot be in a node with two children because it must be larger than either child. The nodes a[ceiling(N/2)] through a[N] have either 0 or 1 children.
+
+[X] The main reason to implement a heap-ordered complete binary tree using an array (instead of with explicit pointers) is to improve the order of growth of the running time of the insert and delete the maximum operations.
+Correct 0.20    The array representation does not improve the order of growth of the running time, but it does reduces the amount of memory and reduce the leading constants in the running times per operation.
+
+[V] The number of compares to insert N distinct keys in ascending order into an initially empty binary heap is ~ N lg N.
+Correct 0.20    The number of compares to insert the ith key is ~ lg i because the new key is exchanged from a leaf to the root, one level at a time. Now, lg 1 + lg 2 + ... + lg N ~ N lg N.
+
+[V] When performing bottom-up heap construction on an array of N distinct keys, there is at most one compare between the two keys x and y.
+Inorrect    0.00    Consider the array { -, 99, 100, 5, 1, 2, 3, 4 }. The keys 1 and 2 are compared with each other twice, once when sinking 100 and once when sinking 99.
+
+[X] It is possible to improve our binary heap implementation so that delMax() takes ~ 1/2 lg N compares per operation (in the worst case), where N is the number of keys in the data structure.
+Correct 0.20
+
+
+Your Answer     Score   Explanation
+
+[V] The main reason to implement a heap-ordered complete binary tree using nodes (with explicit pointers) instead of an array is to get logarithmic performance in the worst case for insert and delete-the-maximum (instead of an amortized bound).
+Correct 0.20    The array implementation leads to an amortized bound because the array needs to be resized as it grows and shrinks.
+
+[X] In the best case, The number of compares to heapsort an array of N distinct keys is linear.
+Correct 0.20    The best case running time of heapsort is ~ N lg N when the N keys are distinct. Proving this fact is not easy.
+
+[V] The height of a complete 4-way tree (each node has 4 children) with N nodes is ~ 1/2 lg N.
+Correct 0.20    A complete 4-way tree of height h has between 1 + 4 + 16 + ... + 4^(h-1) + 1 ~ 1/3 4^h and 1 + 4 + 16 + ... + 4^h ~ 4/3 4^h nodes. Thus, h ~ log_4 N, or equivalently ~ 1/2 lg N.
+
+[V] Given a binary heap with N distinct keys, the result (ignoring any array resizing) of deleting the maximum key and then inserting that key back into the heap yields the original binary heap.
+Inorrect    0.00    Consider the binary heap a[] = { -, 3, 2, 1 }. After the deletion, it will be { -, 2, 1 }. After the insertion, it will be { -, 3, 1, 2 }.
+
+[X] When performing bottom-up heap construction on an array of N distinct keys, there can be as many as ~ lg N compares between the two keys x and y.
+Inorrect    0.00    Consider an array of the form { 98, 99, 12, 100, 9, 10, 11, 1, 2, 3, 4, 5, 6, 7, 8 }, where the leftmost spine (except for the bottom level) consists of the largest ~ lg N keys in ascending order and the first two keys in the bottom level are 1 and 2. Then, 1 and 2 are compared when sinking each of ~ lg N largest keys on the leftmost spine.
+Total       0.60 / 1.00
+
+
+
+Your Answer     Score   Explanation
+
+[X] It is possible to implement our priority queue API so that both insert() and delMax() take ~ lg (lg N) compares per operation (in the worst case), where N is the number of keys in the data structure.
+Correct 0.20    This would violate the ~ N lg N sorting lower bound since it would yield a ~ 2 N lg (lg N) compare-based sorting algorithm.
+
+[X] It is possible to use binary search to improve our binary heap implementation so that insert() takes ~ lg (lg N) compares per operation (in the worst case), where N is the number of keys in the data structure.
+Inorrect    0.00    Note that the keys on the path from a leaf to the root are in nondecreasing order. Thus, we can binary search to find how far up in the tree the inserted key will end up. This takes only ~ lg lg N compares, though it still takes ~ lg N exchanges (in the worst case).
+
+[V] The number of internal nodes (nodes with 2 children) in a binary heap containing N keys is ~ 1/2 N.
+Correct 0.20    Every time you add 2 nodes, it increases the number of leaves (nodes with 0 children) by 1, so there are ~ 1/2 N leaf nodes. There is at most one node that has only 1 child.
+
+[V] Let a[] be an array in which a[1] > a[2] > ... > a[N] (and a[0] is empty). Then a[] is a binary heap.
+Correct 0.20    A reverse-sorted array obeys heap order.
+
+[X] In the best case, the number of compares to insert N distinct keys into an initially empty binary heap is linearithmic.
+Correct 0.20    If the keys are in descending order, it takes N-1 compares.
+
+
+
+[V] A programmer might prefer heapsort to mergesort because it uses only constant space (other than the input array).
+Correct 0.20    Mergesort uses linear extra space.
+
+[V] The number of compares to insert N distinct keys in descending order into an initially empty binary heap is ~ N.
+Correct 0.20    Each insert operation (other than the first) takes 1 compare and 0 exchanges.
+
+[X] Given a sorted array of N comparable keys, it is possible to build a binary heap containing those N keys using no more than ~ 1/2 N compares.
+Inorrect    0.00    It can be done with 0 compares - a reverse-sorted array is a heap.
+
+[V] A 3-heap is an array representation (using 1-based indexing) of a complete 3-way tree, where the key in each node is greater than (or equal to) its children's keys. In the worst case, the number of compares to delete the maximum key from a 3-heap containing N keys is ~ log_3 N.
+Inorrect    0.00    It is ~ 3 log_3 N.The height is ~ log_3 N. In the worst case, three compares are needed for every node on a path from the root node to a leaf node.
+
+[X] In the best case, The number of compares to heapsort an array of N distinct keys is linear.
+Correct 0.20    The best case running time of heapsort is ~ N lg N when the N keys are distinct. Proving this fact is not easy.
+Total       0.60 / 1.00
+
+
+Your Answer     Score   Explanation
+
+[X] Let a[] be a binary heap that contains the N distinct integers 1, 2, ..., N. Then, key N must be in a[1] and key N-2 must be at either a[4], a[5], a[6], or a[7].
+Correct 0.20    Key N-2 could be in a child of the root (a[2] or a[3]), in addition to being a grandchild of the root (a[4], a[5], a[6], or a[7]).
+
+[X] It is possible to improve our binary heap implementation so that delMax() takes ~ 1/2 lg N compares per operation (in the worst case), where N is the number of keys in the data structure.
+Correct 0.20    This would violate the ~ N lg N sorting lower bound since it would yield a ~ 1/2 N lg N compare-based sorting algorithm. Recall, it is possible to construct a binary heap on N keys using at most 2N compares.
+
+[X] In the best case, The number of compares to heapsort an array of N distinct keys is linear.
+Correct 0.20    The best case running time of heapsort is ~ N lg N when the N keys are distinct. Proving this fact is not easy.
+
+[V] In the worst case, deleting a maximum key from a binary heap containing N keys takes ~ lg N compares.
+Inorrect    0.00    It can take ~ 2 lg N compares because the sink operation performs as many as 2 compares for each node on the path from the root to a leaf.
+
+[V] Suppose that you insert N distinct keys into an initially empty binary heap. The total number of compares involving any one key (during the N insertions) is at most ceiling(lg N).
+Inorrect    0.00    The number of compares can be N-1. Consider the sequence { N, 1, 2, ..., N-1 }. Every key inserted will be involved in a compare with the largest key N.
+Total
+
+
+
+[X] Let a[] be a binary heap that uses 0-based indexing (instead of 1-based indexing). Then, the children of a[k] are a[2k] and a[2k+1].
+Correct 0.20    The children are a[2k+1] and a[2k+2].
+
+[V] The number of compares to heapify a sorted array of N distinct items using bottom-up heap construction is ~ 2N.
+Correct 0.20    This is the worst case for heap construction: the root of each subheap considered sinks all the way to the bottom.
+
+[X] The height of a complete binary tree with N > 0 nodes is exactly floor(lg N).
+Inorrect    0.00    As you add nodes to a complete binary tree, the height increases by 1 only when N is a power of 2.
+
+[X] The main reason that we can use an array to represent the heap-ordered tree in a binary heap is because the tree is a *binary* tree.
+Correct 0.20    It is because the tree is complete.
+
+[V] The number of internal nodes (nodes with 2 children) in a binary heap containing N keys is ~ 1/2 N.
+Correct 0.20    Every time you add 2 nodes, it increases the number of leaves (nodes with 0 children) by 1, so there are ~ 1/2 N leaf nodes. There is at most one node that has only 1 child.
+Total
+
+
+
+Your Answer     Score   Explanation
+
+[X] Let a[] be a binary heap that contains the N distinct integers 1, 2, ..., N. Then, key N must be in a[1] and key N-2 must be at either a[4], a[5], a[6], or a[7].
+Correct 0.20    Key N-2 could be in a child of the root (a[2] or a[3]), in addition to being a grandchild of the root (a[4], a[5], a[6], or a[7]).
+
+[V] It is possible to use binary search to improve our binary heap implementation so that insert() takes ~ lg (lg N) compares per operation (in the worst case), where N is the number of keys in the data structure.
+Correct 0.20    Note that the keys on the path from a leaf to the root are in nondecreasing order. Thus, we can binary search to find how far up in the tree the inserted key will end up. This takes only ~ lg lg N compares, though it still takes ~ lg N exchanges (in the worst case).
+
+[V] A programmer might prefer heapsort to mergesort because it uses only constant space (other than the input array).
+Correct 0.20    Mergesort uses linear extra space.
+
+[X] The main reason that we can use an array to represent the heap-ordered tree in a binary heap is because the tree is heap-ordered.
+Correct 0.20    It is because the tree is complete.
+
+[X] Given a binary heap with N distinct keys, the result (ignoring any array resizing) of inserting a key larger than any of the N keys and then deleting the maximum key yields the original binary heap.
+Inorrect    0.00    The insertion and deletion operations will consider exactly the same path from the leaf to the root.
+Total

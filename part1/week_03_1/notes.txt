@@ -1,0 +1,280 @@
+5.1 MERGESORT
+
+Mergesort
+Perl, Python stable sort, C++ stable sort, firefox javascript, java sorting for objects
+Quicksort
+C qsort, UNIX, Python, Matlab, chrome javascript, java sorting for primptives
+
+IDEA
+- divide array into two halves
+- recursively sort each falve
+- merge two halves
+~auxiliary [вспомогательный]
+~inplace [оперативный]
+~whether [независимо от того, что]
+~exhausted [истощённый]
+~confidence [уверенность, вера, доверие]
+~assumption [принятие на себя (обязанностей), вступление (в должность)]
+~invariant [неизменный]
+common idea: divide and conquer!
+
+T(N) ~ N * log(N)
+compares: N log N
+array accesses: 6 N log N
+extra memory: N
+~N/2 [N over two]
+
+a sorting algorythm is in-place if it uses <= c log N extra memory
+ex: insertion sort, selection sort, shell-sort
+
+>> in-place merge
+
+
+
+5.2 BOTTOM-UP MERGESORT
+
+bottom-ip mergesort - Non-recursion version of mergesort
+idea:
+- pass through array, merging subarrays of size 1
+- repeat for subarrays of size 2, 4, 8, 16, ...
+~concise [краткий, сжатый, сокращённый]
+T(N) ~ log N
+
+
+
+5.3 SORTING COMPLEXITY
+
+Computitional complexity - framework to study efficiency of algorythms for solving a particular problem X.
+Model of computations: allowable operations
+Cost model: operation count(s)
+Upper bound: cost guarantee provided by some algorythm for X (How difficult to solve a problem)
+Lower bound: proven limit on cost guaranteeof all algorithms for X (No algorythm can do better)
+Optimal algorythm: algorythm with best possible cost guarantee for X. [between lower bound and upper bound].
+
+EXAMPLE FOR SORTING:
+model of computation: decision tree [can access information only through compares, e.g. Java Comparable Interface]
+cost model: number of compares
+upper bound: ~ N log N
+lower bound: ?
+optimal algorythm: ?
+
+Decision Tree (for elements a, b, c)
+
+
+                  _______________[a<b]_______________
+             yes /                                   \ no
+            [b<c]                                     [a<c]
+       yes /     \ no                            yes /     \ no
+    (a b c)       [a<c]                       (b a c)       [b<c]
+             yes /     \ no                            yes /     \ no
+          (a c b)       (c a b)                     (b c a)       (c b a)
+
+
+height of tree = worst case number of compares
+(at least) one leaf for each possible ordering
+
+if height = h: number of leafs = 2 ^ h, at least N! leafs
+
+Any compare-based algorythm must use at least log (N!) ~ N log N compares in worst case
+
+LOWER BOUND:
+2^h >= number_of_leafs >= N! >>> h >= lg(N!) ~ N lg N
+OPTIMAL ALGORYTHM: MERGESORT
+
+MERGESORT IS:
+- optimal with respect to number of compares
+- not optimal with respect to space usage
+~with respect to [что касается]
+
+Lower bound may not hold if the algoryth has information about:
+-the initial order of input
+-the distribution of key values
+-representation of the keys
+
+For partially-ordered arrays:
+depending of the initial order of the input, we may not need N log N compares,
+isertion sort requeres N-1 compares if input array is sorted.
+
+Duplicate keys:
+depending on the input distribution of duplicates, we may not need N lg N compares.
+
+Digital properties of keys:
+We can use digit/character comparesinstead of key compares for numbers and strings
+
+
+
+5.4 COMPARATORS
+
+~compelling [непреодолимый, мощный]
+
+
+
+5.5 STABILITY
+
+~mess up [провалить, испортить]
+Stability - the property that allow to no break result of previous sorting while you do current sorting
+sort by name, sort by section != sort by name and section
+
+Which sorts are stable?
+YES: MERGESORT, INSERTION SORT (less than)
+NO: SELECTION SORT, SHELLSORT  (less than or equall to)
+Need to carefully check the code ("less than" vs "less than or equall to")
+
+~straightforward [прямой, непосредственный]
+~stably [устойчиво]
+~fewer [меньше]
+
+
+
+EXERCISE 1
+
+(seed = 569691)
+Give the array that results immediately after the 7th call (and return)
+from merge() when top-down mergesorting the following array of size 12:
+
+56 30 48 52 31 22 59 40 73 86 62 33
+Answer for Question 1
+You entered:
+
+Your Answer     Score   Explanation
+22 30 31 48 52 56 40 59 73 86 62 33 Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+The correct answer is: 22 30 31 48 52 56 40 59 73 86 62 33
+
+Here is the array immediately after each call to merge():
+
+                 56 30 48 52 31 22 59 40 73 86 62 33
+merge(0, 0, 1):  30 56 48 52 31 22 59 40 73 86 62 33
+merge(0, 1, 2):  30 48 56 52 31 22 59 40 73 86 62 33
+merge(3, 3, 4):  30 48 56 31 52 22 59 40 73 86 62 33
+merge(3, 4, 5):  30 48 56 22 31 52 59 40 73 86 62 33
+merge(0, 2, 5):  22 30 31 48 52 56 59 40 73 86 62 33
+merge(6, 6, 7):  22 30 31 48 52 56 40 59 73 86 62 33
+merge(6, 7, 8):  22 30 31 48 52 56 40 59 73 86 62 33
+
+
+
+EXERCISE 2
+
+(seed = 693549)
+Give the array that results immediately after the 7th call (and return)
+from merge() when bottom-up mergesorting the following array:
+
+62 91 81 64 51 16 15 39 77 66
+Answer for Question 2
+You entered:
+
+Your Answer     Score   Explanation
+62 64 81 91 15 16 39 51 66 77   Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+The correct answer is: 62 64 81 91 15 16 39 51 66 77
+
+Here is the array immediately after each call to merge():
+
+                 62 91 81 64 51 16 15 39 77 66
+merge(0, 0, 1):  62 91 81 64 51 16 15 39 77 66
+merge(2, 2, 3):  62 91 64 81 51 16 15 39 77 66
+merge(4, 4, 5):  62 91 64 81 16 51 15 39 77 66
+merge(6, 6, 7):  62 91 64 81 16 51 15 39 77 66
+merge(8, 8, 9):  62 91 64 81 16 51 15 39 66 77
+merge(0, 1, 3):  62 64 81 91 16 51 15 39 66 77
+merge(4, 5, 7):  62 64 81 91 15 16 39 51 66 77
+
+
+
+EXERCISE 3
+
+(seed = 474891)
+Which of the following statements about mergesort are true? Check all that apply. Unless otherwise specified, assume that mergesort refers to the pure recursive (top-down) version of mergesort (with no optimizations), using the merging subroutine described in lecture.
+Your Answer     Score   Explanation
+
+[X] A single key can be involved in no more than ~ 1/2 N compares when mergesorting an array containing N distinct keys.
+Correct 0.20    Consider an array of the form { N, 1, 2, 3, 4, ..., N-1 }. The largest key will be compared with every other key, for a total of N-1 compares.
+
+[V] For any array of N distinct keys, top-down mergesort and bottom-up mergesort make exactly the same number of compares.
+Inorrect    0.00    This can be false when N is not a power of 2. For example, consider the array 0 1 2 3 4. Top-down mergesort makes the 7 compares { 0-1, 0-2, 1-2, 3-4, 0-3, 1-3, 2-3 } while bottom-up mergesort makes the 8 compares { 0-1, 2-3, 0-2, 1-2, 0-4, 1-4, 2-4, 3-4 }.
+
+[X] It is straightforward to adapt mergesort to stably sort a singly-linked list of N items using a linearithmic number of compares and only logarithmic extra memory (other than the input linked list).
+Inorrect    0.00    The merging step can be done with a linear number of compares using only constant extra space.
+
+[V] No compared-based sorting algorithm can do fewer compares than mergesort on any input.
+Inorrect    0.00    Insertion sort does fewer compares on an input array that is already sorted (~ N vs. ~ 1/2 N lg N).
+
+[X] No compare-based sorting algorithm can guarantee to use ~ N lg N compares (in the worst case) to sort an array of N items.
+Correct 0.20    Mergesort uses ~ N lg N compares in the worst case.
+Total       0.40 / 1.00
+
+
+Your Answer     Score   Explanation
+[X] Mergesort is faster than quicksort in practice because it uses fewer compares than quicksort.
+Correct 0.20    Mergesort is typically slower than quicksort in practice even though it makes fewer compares. Other factors (including array accesses and cache) outweigh the advantage in the number of compares.
+
+[X] Any two items are compared with one another no more than once during bottom-up mergesort.
+Inorrect    0.00    Once two items are compared, they are merged into the same subarray. Only items in different subarrays can be compared.
+
+[X] Bottom-up mergesort is preferred over mergesort in practice because recursion is slow.
+Correct 0.20    The recursive version of mergesort is typically faster than the bottom-up version. Recursive algorithms are not necessarily slower than their iterative counterparts when the depth of the recursion stack is small (e.g., logarithmic).
+
+[X] It is possible to implement a linearithmic version of mergesort that uses only logarithmic extra space (other than the input array), but such versions are not currently practical.
+Inorrect    0.00    The merging step can be done using only logarithmic (or even constant) extra space but no such method is known to be practical.
+
+[V] For any array of N distinct keys, top-down mergesort and bottom-up mergesort compare exactly the same pairs of keys (but possibly in a different order).
+Inorrect    0.00    The compares can be different if N is not a power of 2. For example, consider the array 0 1 2 3 4. Top-down mergesort makes the compares { 0-1, 0-2, 1-2, 3-4, 0-3, 1-3, 2-3 } while bottom-up mergesort makes the compares { 0-1, 2-3, 0-2, 1-2, 0-4, 1-4, 2-4, 3-4 }.
+
+Your Answer     Score   Explanation
+
+[V] For any array of N distinct keys, top-down mergesort and bottom-up mergesort make exactly the same number of compares.
+Inorrect    0.00    This can be false when N is not a power of 2. For example, consider the array 0 1 2 3 4. Top-down mergesort makes the 7 compares { 0-1, 0-2, 1-2, 3-4, 0-3, 1-3, 2-3 } while bottom-up mergesort makes the 8 compares { 0-1, 2-3, 0-2, 1-2, 0-4, 1-4, 2-4, 3-4 }.
+
+[X] Suppose we have a sorting algorithm that in addition to regular compares, is also allowed super-compares: take three keys and return those three keys in sorted order. Then, any compare-based sorting algorithm requires at least log_6 (N!) compares or super-compares (in the worst case) to sort an array of N items.
+Inorrect    0.00    Similar to the lower bound argument with 2-way compares, but now the height of the tree is at least log_6 (N!) since each node has as many as 6 children, corresponding to the 3! possible outcomes for each super-compare.
+
+[X] Unstable sorting algorithms are not widely used in practice.
+Correct 0.20    Quicksort is an unstable sorting algorithm that is widely used in practice.
+
+[V] When merging two subarrays, the main reason for taking equal keys from the left subarray before the right subarray is to ensure stability.
+Correct 0.20    This is precisely the reason.
+
+[V] Any two items are compared with one another no more than once during mergesort.
+Correct 0.20    Once two items are compared, they are merged into the same subarray. Only items in different subarrays can be compared.
+Total       0.60 / 1.00
+
+Your Answer     Score   Explanation
+
+[X] Suppose that we modify mergesort to evenly divide each subarray into 3 subarrays, and then merge the 3 subarrays together. Then, the number of compares to 3-way mergesort an array of N items is linearithmic.
+Inorrect    0.00    When N is a power of 3, the number of compares satisfies T(N) = 3 T(N/3) + 2N with T(1) = 0 since it takes no more than 2N compares to merge three sorted subarrays, each of length N/3. The solution to the recurrence is 2 N log_3 N, which is still linearithmic, but the constant is worse than with standard 2-way mergesort.
+
+[V] Mergesort is a stable sorting algorithm.
+Correct 0.20    This is a key property of mergesort.
+
+[V] Immediately after each merge in mergesort, the size of each of the subarrays known to be sorted is a power of 2, except possibly for the last one.
+Inorrect    0.00    If the input array is of size 6, then just before the final merge, both subarrays will be of size 3.
+
+[X] The main reason for recurring on the left subarray before the right subarray in mergesort is to ensure stability.
+Correct 0.20    It does not affect correctness, stability, or the number of compares.
+
+[V] The number of compares to mergesort a reverse-sorted array of N distinct keys is ~ N lg N.
+Inorrect    0.00
+
+Your Answer     Score   Explanation
+
+[X] Suppose we have a sorting algorithm that in addition to regular compares, is also allowed super-compares: take three keys and return those three keys in sorted order. Then, any compare-based sorting algorithm requires at least log_3 (N!) compares or super-compares (in the worst case) to sort an array of N items.
+Correct 0.20    Similar to the lower bound argument with 2-way compares, but now the height of the tree is at least log_6 (N!) since each node has as many as 6 children, corresponding to the 3! possible outcomes for each super-compare.
+
+[V] Mergesort is a stable sorting algorithm.
+Correct 0.20    This is a key property of mergesort.
+
+[X] The number of compares in bottom-up mergesort depends only on the size of the array N (and not on the items in the array).
+Correct 0.20    The number of compares ranges from ~ 1/2 N lg N (sorted array) to ~ N lg N (random array).
+
+[V] A single key can be involved in no more than ~ 1/2 N compares when mergesorting an array containing N distinct keys.
+Inorrect    0.00    Consider an array of the form { N, 1, 2, 3, 4, ..., N-1 }. The largest key will be compared with every other key, for a total of N-1 compares.
+
+[X] Mergesort is faster in practice than insertion sort regardless of the number of items N in the array.
+Correct 0.20
+~no more than [не более, чем]
+~as many as [столько, сколько]

@@ -1,0 +1,320 @@
+6.1 QUICKSORT
+
+Idea:
+- shuffle the array
+- Partition so that, for some j
+    - entry a[j] is in place
+    - no larger entry to the left of j
+    - no smaller entry to the right of j
+- Sort each peice recursively
+
+initial:      0 9 8 1 7 6 3 5 2 4
+shuffle:      7 3 1 9 2 4 0 6 8 5
+
+partition     6 3 1 5 2 4 0 [7] 8 9
+
+sort left:    0 1 2 3 4 5 6 [7] 9 8
+sort right:   0 1 2 3 4 5 6 [7] 8 9
+complete
+
+must be two pointers: from left to right, from right to left
+
+Details:
+- Partitioning in-place: Using an extra array for partitioning easier (and stable) but is not worth the cost.
+~worth [значение]
+- Terminating of loop: Testing whether the pointers cross is a bit trickier that it might seem.
+- Staying in bounds:
+~redundant [лишний, чрезмерный]
+- Staying in bounds: The (j = start) test is redundant, but the (i == end) is not
+- Preserving randomness: shuffle needed for performance guarantee
+- Equal keys: when duplicates are present it is (counter-intuitively) better to stop on keys equal to the partitioning item's key.
+
+Best case T(N) ~ N log N
+Worst case T(N) ~ 1/2 N^2
+Average case:
+    number of compares C(N) to quicksort an array of N distinct keys is 2N log N
+    number of exchanges 1/3 N log N
+    T(N) ~ 1.39 N log N
+    - 39% more compares than mergesort.
+    - but faster than mergesort in practice because of less data movements.
+
+Random shuffle
+- probabolistic buarantee against worst case
+- basis for math model that can be validated with experiments
+
+~emptor [покупатель]
+Caveat emptor: many textbook implementations go quadratic if array:
+- is sorted or reverse sorted
+- has many duplicates (even if randomized!)
+
+Quicksort is IN-PLACE algorithm
+- partioning - constant extra space
+- depth of recursion - logarithmic extra space (with high probability)
+    can guarantee logarithmic extra depth by recursion on smaller subarray before larger subarray
+
+Quicksort is not stable
+
+~pivot [точка опоры]
+
+
+
+6.2 SELECTION
+
+Goal: Given of array of N items, find the kth largest
+Example; Min (k=0), max (k=N-1), median(k=N/2)
+
+Applications.
+- Order statistics.
+- Find the "top k"
+
+Quick-select takes linear time on average
+worst case: quadratic (very rare)
+
+~wothwhile [стОящий]
+
+
+
+6.3 DUPLICATE KEYS
+
+often, Purpose of sort is to bring equal items together
+e.g. sort population by age, remove duplicates from mailing list
+
+Typical characteristic of such applications:
+- huge array
+- small number of key values
+
+MERGESORT with DK:
+    always between
+        1/2 N log N
+    and
+        N log N
+
+QUICKSORT with DK:
+    goes quadratic because partitioning stops on equal keys!
+Recomended: stop partitioning scan on equal items
+Desirable: put all items equal to the partitioning item in place.
+
+A A A A [B B B] C C C C C C C C
+
+
+3-way partitioning:
+    Goal: partition array into 3 parts sothat:
+    - entries between lt and gt equal to partition item V
+    - No larger entries to left of lt
+    - No smaler entries to right of gt
+
+Sorting lower bound:
+    If there are N distinct keys and the ith one occurs x[i] times, any compare-based sorting algorythm must use at least
+    sum(1, N, x log (x[i]/N))
+    compares in wors case
+
+    [ N log N when all distinct, linear when only a constant number of distinct keys ]
+
+Randomized quicksort with 3-way partitioning reduces running time from linearythmic to linear in broad class of applications.
+~broad [обширный]
+
+
+
+6.4 SYSTEM SORTS
+
+Tukey's ninther
+median of the median of 3 samples, each of three entries.
+- Approximates the median of 9
+- Uses at most 12 compares
+
+                             !     !     !     !     !     !     !     !     !
+nin evenly spaced entries:   R  L  A  P  M  C  G  A  X  Z  K  R  B  R  J  J  E
+groups of 3:                [R  A  M]   [G  X  K]   [B  J  E]
+medians                     [M  K  E]
+ninther                     [K]
+
+Why use Tukey ninther? (in quicksort of large arrays)
+    Better partitioning than random shuffle and less costly.
+
+
+Which sorting algorythm to use?
+    Internal sorts:
+    - insertion sort, selection sort, buble sort, shaker sort
+    - quicksort, mergesort, heapsort, samplesort, shellsort
+    - solitaire sort, red-black sort, splay sort, Yaroslavskiy sort, psort
+
+    External sorts:
+    - Poly-phase mergesort, cascade merge, oscillating sort
+
+    String/radix sort:
+    - Distribution, MSD, LSD, 3-way string quicksort
+
+    Parallel sort:
+    - Bitonic sort, Batcher even-odd sort
+    - Smooth sort, cube sort, column sort
+    - GPUsort
+
+
+
+Question 1
+(seed = 143149)
+Give the array that results after applying the standard 2-way partitioning
+subroutine from lecture to the following array:
+
+    33 82 52 88 32 66 19 62 69 17 90 28
+
+Recall, in the standard 2-way partitioning subroutine, the leftmost entry is the partitioning item.
+Answer for Question 1
+You entered:
+
+Your Answer     Score   Explanation
+32 28 17 19 33 66 88 62 69 52 90 82 Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+The correct answer is: 32 28 17 19 33 66 88 62 69 52 90 82
+
+Here is the array before and after each exchange:
+
+  i   j    0   1   2   3   4   5   6   7   8   9  10  11
+--------------------------------------------------------
+  0  12   33  82  52  88  32  66  19  62  69  17  90  28
+  1  11   33  82  52  88  32  66  19  62  69  17  90  28
+  1  11   33  28  52  88  32  66  19  62  69  17  90  82
+  2   9   33  28  52  88  32  66  19  62  69  17  90  82
+  2   9   33  28  17  88  32  66  19  62  69  52  90  82
+  3   6   33  28  17  88  32  66  19  62  69  52  90  82
+  3   6   33  28  17  19  32  66  88  62  69  52  90  82
+  5   4   32  28  17  19  33  66  88  62  69  52  90  82
+      4   32  28  17  19  33  66  88  62  69  52  90  82
+Question 2
+(seed = 385311)
+Give the array that results after applying Dijkstra's 3-way partitioning
+subroutine from lecture to the following array:
+
+    48 48 48 48 83 93 55 48 58 81
+Answer for Question 2
+You entered:
+
+Your Answer     Score   Explanation
+48 48 48 48 48 55 93 58 81 83   Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+The correct answer is: 48 48 48 48 48 55 93 58 81 83
+
+Here is the array after each iteration:
+
+ lt   i  gt    0   1   2   3   4   5   6   7   8   9
+----------------------------------------------------
+  0   0   9   48  48  48  48  83  93  55  48  58  81
+  0   1   9   48  48  48  48  83  93  55  48  58  81
+  0   2   9   48  48  48  48  83  93  55  48  58  81
+  0   3   9   48  48  48  48  83  93  55  48  58  81
+  0   4   9   48  48  48  48  83  93  55  48  58  81
+  0   4   8   48  48  48  48  81  93  55  48  58  83
+  0   4   7   48  48  48  48  58  93  55  48  81  83
+  0   4   6   48  48  48  48  48  93  55  58  81  83
+  0   5   6   48  48  48  48  48  93  55  58  81  83
+  0   5   5   48  48  48  48  48  55  93  58  81  83
+  0   5   4   48  48  48  48  48  55  93  58  81  83
+  0       4   48  48  48  48  48  55  93  58  81  83
+Question 3
+(seed = 777404)
+Which of the following statements about quicksort are true? Check all that apply. Unless otherwise specified, assume that quicksort refers to the recursive, randomized version of quicksort (with no extra optimizations) and uses the 2-way partitioning algorithm described in lecture.
+Your Answer     Score   Explanation
+
+[X] The expected amount of space (other than the input array) to quicksort an array of N distinct keys is logarithmic in N.
+Inorrect    0.00    This is another reason for the random shuffle. Although not asserted in lecture, the expected depth is ~ 4.311 ln N.
+
+[X] The expected number of compares to quicksort a sorted array of N distinct keys is ~ 2 N ln N.
+Inorrect    0.00    Without the random shuffle it would be quadratic.
+
+[X] Quicksort (without the random shuffle) is a stable sorting algorithm.
+Correct 0.20    Quicksort is unstable, with or without the random shuffle.
+
+[V] When partitioning an array of N distinct keys, the partitioning item may be compared to itself.
+Correct 0.20    This happens if the key in the partitioning item is the smallest key in the array.
+
+[V] The number of compares to 3-way quicksort an array of N distinct keys is linear in the best case.
+Inorrect    0.00    If there are no items with equal keys, 3-way partitioning offers no advantage over the standard version of quicksort (and its best case is linearithmic).
+Total       0.40 / 1.00
+
+Your Answer     Score   Explanation
+
+[X] 3-way quicksort (without the random shuffle) is a stable sorting algorithm.
+Correct 0.20    3-way quicksort is unstable, with or without the random shuffle.
+
+[X] The maximum number of times that any one item is involved in a compare when quicksorting an array of N items is linear.
+Inorrect    0.00    When an item is the partitioning item, it is involved in no more than N+1 compares, at which point it is never compared again. When an item is not the partitioning item, it can be compared to a partitioning item no more than twice (to the partitioning item), at which point the partitioning item is fixed (and never compared against the item again).
+
+[V] The number of partitioning steps to quicksort an array of N items is no larger than N.
+Correct 0.20    Each partitioning step fixes the partitioning item into position. In fact, it will be strictly less than N because subarrays of length 1 are not partitioned.
+
+[V] The expected number of exchanges to quicksort a uniformly random array of N distinct keys is ~ N ln N.
+Inorrect    0.00    It is ~ 1/3 N ln N, one-sixth the number of compares, as asserted (but not proved) in lecture.
+
+[X] Any two items that are compared with one another during one quicksort partitioning step cannot be compared with one another during a subsequent partitioning step.
+
+Your Answer     Score   Explanation
+
+[X] Quicksort (without the random shuffle) is a stable sorting algorithm.
+Correct 0.20    Quicksort is unstable, with or without the random shuffle.
+
+[X] The primary reason to use the first entry in the array as the partitioning item instead of the last entry is to guarantee performance (probabilistically).
+Correct 0.20    It is an arbitrary choice.
+
+[V] Quicksort uses only a constant amount of space (other than the input array).
+Inorrect    0.00    The expected size of the recursion stack is logarithmic.
+
+[V] The maximum number of recursive function calls to sort() when quicksorting an array of N distinct items is no more than 2N.
+Correct 0.20    Two recursive calls to sort() are made only after a partitioning step, which fixes the repartitioning item item into position.
+
+[V] Partitioning an array of N items uses only a constant amount of space (other than the input array).
+
+Your Answer     Score   Explanation
+
+[X] The expected number of compares to find a median of an array of N distinct keys using quickselect is ~ 2N.
+Correct 0.20    The expected number of compares is ~ (2 + 2 ln 2) N. In fact, no compare-based algorithm can find a median using fewer than 2N compares.
+
+[X] Given an array of N items and a parititoning item, it is straightforward to *stably* 3-way partition the array using only a linear number of compares and an auxiliary array of length N.
+Inorrect    0.00    Copy the items to the auxiliary array; count the number of items { less than, equal to, greater than } the partitioning item; scan through the array from left-to-right, and copy the items back to the original array using the counts to identify their locations.
+
+Your Answer     Score   Explanation
+
+[V] The primary advantage of 3-way quicksort (over standard quicksort) is improved performance when the array has many items with equal keys.
+Correct 0.20    3-way quicksort makes a linear number of compares in cases where the standard version of quicksort makes a linearithmic number of compares ,e.g., N equal keys.
+
+[X] The number of compares to quicksort an array of N equal keys is ~ N.
+Correct 0.20    The number of compares is ~ N lg N. The 2-way partitioning algorithm stops the scan on equal keys, so each passioning step divides the array in half.
+
+[V] The maximum number of times that any one item is involved in a compare when quicksorting an array of N items is linear.
+Correct 0.20    When an item is the partitioning item, it is involved in no more than N+1 compares, at which point it is never compared again. When an item is not the partitioning item, it can be compared to a partitioning item no more than twice (to the partitioning item), at which point the partitioning item is fixed (and never compared against the item again).
+
+[V] The number of compares to quicksort an array of N items with only two distinct keys is linear.
+Inorrect    0.00    The number of compares to quicksort any array of N items is N lg N in the best case.
+
+
+Your Answer     Score   Explanation
+
+[V] The expected number of compares to quicksort a uniformly random array of N distinct keys is ~ 2 N ln N.
+Correct 0.20    This is true for any array of N distinct keys, random or not.
+
+[V] Stability and guaranteed linearithmic performance are two reasons why the Java system sort uses a version of mergesort (instead of quicksort) to sort arrays of objects.
+Correct 0.20    These are two good reasons to favor mergesort.
+
+[X] Any pair of items is compared no more than once during a quicksort partitioning step.
+Inorrect    0.00    In our implementation, the number of compares to partition a subarray of length N can be N+1 (to deal with the pointers crossing). Since all compares involve the partitioning item, a pair of items must be compared twice.
+
+
+Your Answer     Score   Explanation
+
+[X] Dijkstra's 3-way partitioning algorithm partitions an array of N items uses only a constant amount of space (other than the input array).
+Inorrect    0.00    This is a key property of Dijkstra's 3-way partitioning algorithm described in lecture.
+
+[V] The expected amount of space (other than the input array) to quicksort an array of N distinct keys is logarithmic in N.
+Correct 0.20    This is another reason for the random shuffle. Although not asserted in lecture, the expected depth is ~ 4.311 ln N.
+
+[V] In the best case, the number of compares to quicksort an array of N distinct keys is ~ N lg N.
+Correct 0.20    In the best case, each partitioning step divides the array in half.
+
+[V] The number of compares to quicksort an array of N items with only two distinct keys is linearithmic.
+Correct 0.20    This one is tricky. We first argue that the maximum depth of the recursion tree is 2 lg N. Since each level in the recursion tree makes no more than ~ N compares, this implies that there no more than ~ 2 N lg N compares in total. If a subarray contains all equal keys, each partitioning step divides the array in the middle, so the depth of the recursion is at most lg N once the subarray contains all equal keys. If a subarray does not contain all equal keys, then the partitioning step removes at least half of the keys equal to the partitioning item. Thus, once the depth of the recursion is lg N, any subarray has all equal keys. Thus, the maximum depth of the recursion is at most 2 lg N.
+
+[X] The number of partitioning steps to quicksort an array of N items is no larger than the number of distinct keys.
+Correct 0.20    There will be many more than one partition step to sort an array containing N equal keys.

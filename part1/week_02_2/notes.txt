@@ -1,0 +1,233 @@
+4.1 SORTING INTRODUCTION
+
+Common pattern of insertion sort
+
+def sort(self, items):
+    for i in xrange(len(items)):
+        for j in xrange(i, 0, -1):
+            if self.compare(items[j], items[j-1]) < 0:
+                items[j], items[j-1] = items[j-1], items[j]
+    return items
+
+def compare(self, a, b):
+    if a > b:
+        return 1
+    elif a < b:
+        return -1
+    else:
+        return 0
+
+
+
+4.2 SELECTION SORT
+
+- in iteratin i, find index minof smallest remaining entry
+- swap a[i] and a[min]
+~proposition [утверждение]
+
+
+
+4.3 INSERTION SORT
+
+- in iteration i, swap a[i] with each larger entry to itls left
+Inversion - is a pair of keys that are out of order
+
+A E E L M O T R X P S ->> T-R, T-P, T-S, R-P, X-P, X-S
+
+An array is partially sorted if inversions is <= cN (linear)
+
+for partially-sorted array sorting takes T(N) ~ N (count of exchanges = count of inversions)
+
+
+
+4.4 SHELLSORT
+
+Idea: Move entries more than one position at a tyme by h-sorting the array.
+    an h-sorted array is h-interleaved sorted subsequances
+~interleave [чередовать]
+
+h=4
+L E E A M H L E P S O L T S X R
+L-------M-------P-------T
+  E-------H-------S-------S
+    E-------L-------O-------X
+      A-------E-------L-------R
+
+how to h-sort the array?: insertion sort with stride length h
+couse it takes less time on partially sorted arrays
+
+best sequence of inccrements is still opened questions.
+
+
+
+4.5 SHUFFLING
+
+~uniformly [однородно, постоянно, равномерно]
+~permutation [перестановка, перемещение]
+~drawback [недостаток, изъян]
+~unbias [непредвзятый, непредубеждённый]
+
+
+
+4.6 CONVEX HULL
+convex hull - set of N points is the smallest perimeter fence enclosing the points.
+~convex hull [выпуклая оболочка]
+~vertice, vertex [вершина]
+convex hull output = sequence of vertices in counterclockwise order
+
+mechanicle algorithm:
+put nails the around the points and put a rubber band around it
+
+robot motion planning:
+find the shortestpath between a and b that avoids poligonal obstacle.
+
+farthest pair problem:
+Given N points in the plane find a pair of points with largest Euclidian distamce between them.
+Farthest pair of points are extreme points on convex hull
+
+~traverse [пересекать]
+
+Graham scan:
+- find point p with smallest y coordinate
+- sort points by polar angle with p
+- consider points in order; discard unless it create a ccw turn.
+~evidence [основание]
+~degenerate [вырождаться, ухудшаться]
+~planar [плосткосной, плоский]
+~circumference [окружность]
+
+
+
+EXERCISE 1
+
+(seed = 458805)
+Give the array that results after the first 4 exchanges when selection sorting the
+following array:
+
+    86 26 63 56 85 12 46 19 55 77
+Answer for Question 1
+You entered:
+
+Your Answer     Score   Explanation
+12 19 26 46 85 86 56 63 55 77   Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+The correct answer is: 12 19 26 46 85 86 56 63 55 77
+
+Here is the array after each exchange:
+
+   86 26 63 56 85 12 46 19 55 77
+1: 12 26 63 56 85 86 46 19 55 77
+2: 12 19 63 56 85 86 46 26 55 77
+3: 12 19 26 56 85 86 46 63 55 77
+4: 12 19 26 46 85 86 56 63 55 77
+
+
+
+EXERCISE 2
+
+(seed = 563993)
+The column on the left contains an input array of 16 strings to be sorted; the column
+on the right contains the strings in sorted order; each of the other 6 columns contains
+the array at some intermediate step during either insertion sort, selection sort, or shellsort
+(with different columns potentially corresponding to different algorithms).
+
+    corn   corn   corn   corn   cafe   cafe   corn   cafe
+    pear   ecru   ecru   gray   corn   corn   pear   corn
+    ecru   fawn   fawn   cafe   ecru   ecru   cafe   ecru
+    fawn   onyx   gray   ecru   fawn   fawn   fawn   fawn
+    onyx   pear   kobi   mist   gray   gray   onyx   gray
+    gray   gray   lava   pear   kobi   kobi   gray   kobi
+    kobi   kobi   onyx   kobi   lava   lava   kobi   lava
+    lava   lava   pear   fawn   leaf   leaf   lava   leaf
+    mist   mist   mist   onyx   mist   mint   mist   mint
+    wine   wine   wine   sand   wine   wine   wine   mist
+    mint   mint   mint   mint   mint   mist   mint   onyx
+    leaf   leaf   leaf   lava   onyx   onyx   leaf   pear
+    silk   silk   silk   silk   silk   silk   silk   ruby
+    sand   sand   sand   wine   sand   sand   sand   sand
+    ruby   ruby   ruby   ruby   ruby   ruby   ruby   silk
+    cafe   cafe   cafe   leaf   pear   pear   ecru   wine
+    ----   ----   ----   ----   ----   ----   ----   ----
+     0      ?      ?      ?      ?      ?      ?      4
+
+
+Match up each column with the corresponding sorting algorithm from the given list:
+
+    0. Original input
+    1. Insertion sort
+    2. Selection sort
+    3. Shellsort (3x + 1 increments)
+    4. Sorted
+
+You should use each choice at least once. Your answer should be a sequence of 8 integers between
+0 and 4 (starting with 0 and ending with 4) and with each integer separated by a whitespace.
+
+Hint: think about algorithm invariants. Do not trace code.
+Answer for Question 2
+You entered:
+
+Your Answer     Score   Explanation
+0   Correct     0.12
+2   Incorrect   0.00
+1   Correct     0.12
+3   Correct     0.12
+3   Incorrect   0.00
+1   Incorrect   0.00
+3   Correct     0.12
+4   Correct     0.12
+Total           0.62 / 1.00
+Question Explanation
+
+The correct answer is: 0 1 1 3 2 2 3 4
+
+ 0: Original input
+ 1: Insertion sort after 5 iterations
+ 1: Insertion sort after 8 iterations
+ 3: Shellsort after 4-sorting
+ 2: Selection sort after 8 iterations
+ 2: Selection sort after 9 iterations
+ 3: Shellsort after 13-sorting
+ 4: Sorted
+
+
+
+EXERCISE 3
+
+(seed = 603040)
+Which of the following statements about elementary sorting algorithms are true? Check all that apply. Unless otherwise specified, assume that the sorting implementations are the ones from the lectures.
+Your Answer     Score   Explanation
+
+Insertion sort uses only a constant amount of memory (other than the input array).
+Inorrect    0.00    This is a key property of insertion sort.
+
+The expected number of compares to insertion sort a uniformly random array of N distinct keys is ~ 1/2 N^2.
+Inorrect    0.00    It is ~ 1/4 N^2.
+
+Just after the 4-sorting pass in Shellsort (with Knuth's 3x+1 increments), the array is 4-sorted, 5-sorted, and 6-sorted.
+Correct 0.20    The array is not necessarily either 5-sorted and/or 6-sorted.
+
+The number of compares to selection sort a sorted array of N distinct keys is ~ N.
+Correct 0.20    Selection sort uses N(N-1)/2 compares to sort any array of N keys.
+
+If two items a and b have equal keys and a appears before b in the input array, then a appears before b in the array after Shellsorting (with Knuth's 3x+1 increments) the array.
+Correct 0.20    Consider an array with five items { (B, 1), (B, 2), (B, 3), (B, 4), (A, 1) }, where the key is the letter A or B. After Shellsort, the array is { (A, 1), (B, 2), (B, 3), (B, 4), (B, 1) }. This property is known as stability. Stay tuned for the mergesort lecture.
+Total       0.60 / 1.00
+
+
+The number of compares to insertion sort an array of N/2 keys in strictly increasing order followed by the same N/2 keys in strictly decreasing order (e.g., 0 1 2 3 4 4 3 2 1 0) is ~1/8 N^2.
+Correct 0.20    The number of inversions is 0 + 2 + 4 + 6 + ... + (N-2) ~ 1/4 N^2. Thus, the number of compares is ~ 1/4 N^2.
+
+The expected number of compares to insertion sort an array containing N/2 0s and N/2 1s in uniformly random order is ~ 1/8 N^2.
+Inorrect    0.00    Consider element i > 0. How many of the items a[0], a[1], ..., a[i-1] is a[i] inverted with? If a[i] = 1 (which happens with probability 1/2), then the number is 0. If a[i] = 0 (which happens with probability 1/2), then we expect half of the i previous elements to be 1s, so the expected number is i/2. So, the expected number of inversions is 1/2(0/2 + 1/2 + 2/2 + 3/2 + ... + (N-1)/2) ~ N^2/8. Thus, the expected number of compares is ~ 1/8 N^2.
+
+The number of exchanges in Shellsort less than or equal to the number of inverions.
+Inorrect    0.00    Every exchange strictly decreases the number of inversions.
+
+The number of compares to insertion sort an array of N/2 1s interleaved with N/2 0s (e.g., 1 0 1 0 1 0 1 0 1 0) is ~ 1 N lg N.
+Correct 0.20    The number of inversions is 1 + 2 + 3 + ... + N/2 ~ 1/8 N^2. Thus, the number of compares is ~ 1/8 N^2.
+
+The number of compares to insertion sort an array of N/2 1s followed by N/2 0s (e.g., 1 1 1 1 1 0 0 0 0 0) is ~ 1/4 N^2.
+Correct 0.20    The number of inversions is (N/2)*(N/2) = 1/4 N^2. Thus, the number of compares is ~ 1/4 N^2.
+Total       0.60 / 1.00

@@ -1,0 +1,220 @@
+8.1 SYMBOL TABLE API
+
+[from 13:10]
+
+~fascinating [увлекательный, захватывающий]
+API:
+- insert a value with specified key
+- giver a key, serch for the corresponding value
+
+Conventions:
+- values are not null
+- get() returns null if key not present
+- put() overrides old value with new value
+
+~scramble [шифровать, зашифровать]
+java.hashCode() - inserts randomness in process
+
+Best practices: use immutible types for keys
+
+Equivalence relation [java.equals()]: for any references x, y and z:
+analog for python: __eq__,
+- Reflexive: x.equals(x) is true
+- Symmetric: x.equals(y) iff y.equals(x)
+- Transitive: if x.equals(y) and y.equals(z) then x.equals(z)
+- Non-null: x.equals(null) is false
+
+Equals design:
+- Optimization for reference equality
+- Check agains null
+- Check that two objects are of the same type and cast
+- Compare each significant field:
+    - if field is a primptive type, use ==
+    - if field is an object, use equals() (apply rule recursively)
+    - if field is an array, apply to each field
+
+[until 13:55]
+
+
+
+8.2 ELEMENTARY IMPLEMENTATIONS
+
+[from 13:55]
+
+{1} Unordered Linked List
+- search: scan through all keys until find a match
+- insert: scan through all keys until find a match, if no match - add to front
+
+SUMMARY:
+    search:
+        - worst case: N
+        - average case: N/2
+    insert:
+        - worst case: N
+        - average case: N
+    delete:
+        - worst case: N
+        - average case: N/2
+    ordered iteration? NO
+    key interface - equals()
+
+{2} Ordered array
+
+!Binary Search!!
+Maintain an ordered array of key-value pairs
+Rank helper function: how many keys < k?
+
+Problem: To insert, need to shift all greather keys over.
+
+SUMMARY:
+    search:
+        - worst case: log N
+        - average case: log N
+    insert:
+        - worst case: N
+        - average case: N/2
+    delete:
+        - worst case: N
+        - average case: N/2
+    ordered iteration? YES
+    key interface - cpmpareTo()
+
+[until 14:19]
+
+
+
+8.3 ORDERED OPERATIONS
+
+[from 14:19]
+
+~ceiling [максимум, предел, потолок]
+                     sequential search      binary search          BST
+search                       N                     log N            h
+insert                       N                     N                ?
+delete                       N                     N                h
+min/max                      N                     1                h
+floor/ceiling                N                     log N            h
+rank                         N                     log N            h
+select                       N                     1                h
+ordered iteration            N log N               N                N
+
+*h - height of tree (proportional to log N if keys inserted in random order)
+
+[until 14:33]
+
+
+
+8.4 BINARY SEARCH TREES
+
+[from 14:44]
+
+BST - binary tree in symmetric order
+
+a binary tree is either:
+- empty
+- two disjoint binary trees (left and right)
+
+BST (symmetric order):
+    Each node has a key and every node's key is:
+    - larger than all keys in its left subtree
+    - smaller than all keys in its right subtree
+
+Implementation:
+    Node:
+    - key
+    - value
+    - reference to left subtree
+    - reference to right subtree
+
+Number of compares is search/insert: 1 + depth of node
+worst case: 1 + N
+best case: 1 + log N
+
+BST.input:
+    - if key is set - reset key
+    - if key is not set - add new node
+
+Correspondence between BST and quicksort partitioning:
+    correspondence is 1-1 if array has no duplicate keys
+
+IF N distinct keys are inserted into a BST in random order,
+the expected number of compares for search/inser is ~ 2 N log N ->
+-> 1-1 correspondence to quicksort partitioning
+
+IF N distinct keys are inserted in random order,
+expected height of tree is ~ 4.311 log N
+
+worst case (N): exponentially small chance when keys are iserted in random order.
+
+
+SUMMARY:
+    search:
+        - worst case: N
+        - average case: 1.39 log N
+    insert:
+        - worst case: N
+        - average case: 1.39 log N
+    delete:
+        - worst case: N
+        - average case: sqrt(N)
+    ordered iteration? YES
+    key interface - compareTo()
+
+[until 15:32]
+
+
+8.5 ORDERED OPERATIONS IN BST
+
+[from 16:07]
+
+~traverse [обход]
+~inorder [по порядку]
+
+inorder traversal: [guarantee ascending order]
+- traverse left subtree
+- enqueue key
+- traverse right subtree
+
+BST - extremely effective data structure, that can support all of this operations (insert, floor, ceil, ...) quickly, much better than bunary search in an ordered array wich is not dynamic and slow for insertion.
+
+~breadth [ширина, широта]
+
+[until 16:58]
+
+
+
+8.6 DELETION IN BST
+
+[from 16:59]
+
+BST.delete
+
+{1} lazy approach (making of Tombstones)
+- set value of given key to null
+- leave key in tree to guide searches (but don consider it equal in search)
+Cost: ~ 2 ln N' pte insert, search and delete (if keys in random order), where N' is the number of key-value pairs ever inserted in the BST
+>> TOMBSTONE (memory) OVERLOAD!
+
+{2}~ delete the minimum key
+- go left until finding a node with a null left link
+- Replace that node on it's right link
+- update subtree counts
+
+{3} Hibbard deletion
+- delete a node with key k: search for node t containing key k
+- Case 0 (0 children):
+    - delete t by setting parent link to null
+    - update counts
+- Case 1 (1 child):
+    - delete t by replacing parent link
+    - update counts
+- Case 2 (2 children):
+    - find successor x of t
+    - pop the minimum in t's right subtree
+    - put x in t's spot.
+>> NON SYMMETRIC!
+    heigh goin to sqrt(N) (that > than log N)
+
+Longstanding open problem: simple and efficient delete for BST
+
+Red-black BST: guaranteed logarythmic performance for all operations
