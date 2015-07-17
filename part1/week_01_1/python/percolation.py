@@ -55,7 +55,7 @@ class Percolation(object):
 
     def is_open(self, i, j):
         """is site (row i, column j) open?"""
-        return self.ij_to_index(i, j) in self.open_sites
+        return self.open_sites[self.ij_to_index(i, j)]
 
     def is_full(self, i, j):
         """is site (row i, column j) full?"""
@@ -72,7 +72,10 @@ class Percolation(object):
         return index / self.n, index % self.n
 
     def visualize(self):
-        return [['0' if self.is_open(i, j) else 'X' for j in xrange(self.n)] for i in xrange(self.n)]
+        print '+' + '-' * self.n + '+'
+        for line in ['|%s|' % ''.join([u'\u2588' if self.is_open(i, j) else ' ' for j in xrange(self.n)]) for i in xrange(self.n)]:
+            print line
+        print '+' + '-' * self.n + '+'
 
 
 # def ij_to_index(n, i, j):
@@ -85,20 +88,24 @@ def solution(n, t):
     p = Percolation(n)
 
     sites = random.sample(range(n * n), t)
+    opened_sites = 0
     for site in sites:
+
         p.open_by_index(site)
+        opened_sites += 1
         print 'opening site %d' % site
         if p.percolates():
             p.percolation_result = True
             print 'system percolates!'
-            break
+            print 'tries:', opened_sites
+            return p
 
+    print 'system not percolates!'
     return p
 
 
 if __name__ == '__main__':
-    for line in solution(20, 30).visualize():
-        print line
+    solution(20, 400).visualize()
 
 
 class IndexOutOfBoundsException(Exception):

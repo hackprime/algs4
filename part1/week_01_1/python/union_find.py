@@ -53,7 +53,6 @@ class WeightedQuickFindUF(QuickUnionUF):
     def union(self, a, b):
         root_a = self.root(self.arr[a])
         root_b = self.root(self.arr[b])
-        print root_a, root_b
         if self.size[root_a] < self.size[root_b]:
             self.arr[root_a] = root_b
             self.size[root_b] += self.size[root_a]
