@@ -3,8 +3,6 @@
 from union_find import WeightedQuickFindUF
 import random
 
-import random
-
 
 class Percolation(object):
     percolation_result = False

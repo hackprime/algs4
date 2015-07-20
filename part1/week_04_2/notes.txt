@@ -217,4 +217,128 @@ Cost: ~ 2 ln N' pte insert, search and delete (if keys in random order), where N
 
 Longstanding open problem: simple and efficient delete for BST
 
-Red-black BST: guaranteed logarythmic performance for all operations
+next time>> Red-black BST: guaranteed logarythmic performance for all operations
+
+[until 18:04]
+
+
+EXERSICE 1
+
+(seed = 774457)
+Given a BST whose level-order traversal is:
+
+    42 41 85 26 58 94 44 81 97 51
+
+Suppose that you search for the key 99. What is the sequence of keys
+in the BST that are compared with 99 during the search miss?
+Answer for Question 1
+You entered:
+
+Your Answer     Score   Explanation
+42 85 94 97 Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+                     42
+            41               85
+        26               58      94
+                       44  81      97
+                        51
+
+The correct answer is: 42 85 94 97
+
+
+
+EXCERCISE 2
+
+(seed = 731545)
+Given a BST whose level-order traversal is:
+
+    47 18 64 14 36 58 84 12 26 42 83 19
+
+What is the level-order traversal of the resulting BST after Hibbard deleting
+the following three keys?
+
+    58 26 18
+Answer for Question 2
+You entered:
+
+Your Answer     Score   Explanation
+47 19 64 14 36 84 12 42 83  Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+Here is the level-order traversal of the BST after each deletion:
+
+
+                     47
+            18               64
+       14        36     58        84
+    12         26  42          83
+              19
+
+del 58:  47 18 64 14 36 84 12 26 42 83 19
+
+                     47
+            18               64
+       14        36               84
+    12         26  42          83
+              19
+
+del 26:  47 18 64 14 36 84 12 19 42 83
+
+                     47
+            18               64
+       14        36               84
+    12         19  42          83
+
+del 18:  47 19 64 14 36 84 12 42 83
+
+                     47
+            19               64
+       14        36               84
+    12             42          83
+
+The correct answer is: 47 19 64 14 36 84 12 42 83
+
+
+
+EXERCISE 3
+
+(seed = 633597)
+Which of the following statements about binary search and binary search trees are true? Check all that apply. Unless otherwise specified, assume that the binary search and binary search tree implementations are the one from lecture.
+Your Answer     Score   Explanation
+
+[V] Given the level-order traversal of a BST containing N distinct keys, it is possible to reconstruct the shape of the BST.
+Correct 0.20    It is possible because the keys satisfy symmetric order. This is the way we represent a BST in some of the other exercises.
+
+[X] Given a sorted array of N keys (not necessarily distinct) and a key x, it is possible to find the index of the first occurrence of x (or determine that x does not appear in the array)) in logarithmic time in the worst case.
+Inorrect    0.00    Requires a modified version of binary search.
+
+[V] One reason for storing the subtree counts in each node is to efficiently support the range count operations.
+Correct 0.20    Our implementation relies on the the subtree counts to implement this operations in logarithmic time.
+
+[V] In the worst case, the number of key compares to binary search for a key in a sorted array of N distinct keys is ~ lg N.
+Correct 0.20    This is a key property of binary search.
+
+[X] Given two BSTs, each containing N distinct keys, it is possible to create a single BST containing the 2N keys using a logarithmic number of compares.
+Correct 0.20    This would enable us to merge two sorted arrays using a logarithmic number of compares. As in mergesort, this requires at least N compares.
+Total       0.80 / 1.00
+
+Your Answer     Score   Explanation
+
+[V] Given a sorted array of N distinct keys and a key x, it is possible to find the smallest key strictly greater than x in logarithmic time in the worst case.
+Correct 0.20    This is known as the successor function; its implementation is similar to the ceiling function.
+
+[V] Given a sorted array containing N distinct keys, a BST containing the same N keys, and a key x, the number of compares to search for x in the BST is greater than or equal to the number of compares to binary search for x in the sorted array.
+Inorrect    0.00    Suppose that key x is in the root of the BST (but is not the middle element in the sorted array).
+
+[X] Consider a BST containing N nodes that has height h. In the worst case, the number of compares to compute the floor of a key equals h+1.
+Inorrect    0.00    In the worst case, there is one compare for each node on a path from the root to a leaf.
+
+[X] Consider a BST containing N nodes that has height h. In the worst case, the number of compares to determine the number of keys less than a given key is h+1.
+Inorrect    0.00    This is the rank operation. In the worst case, there is one compare for each node on a path from the root to a leaf.
+
+[X] One reason for storing the subtree counts in each node is to efficiently support both the floor and the ceiling operations.
+Correct 0.20    Neither our implementation of the floor method nor our implementation of the ceiling method uses the subtree counts.
+Total
