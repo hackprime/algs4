@@ -1,0 +1,124 @@
+9.1 2-3 SEARCH TREES
+
+[Need to guarantee performance]
+
+Alow 1 or 2 per node
+2-node: one key, two children (less than k, greather than k)
+3-node: two key, three children (less than k1, greather than k2, between k1 and k2)
+
++ perfect balance: Every path from root to null link has same length
++ symmetric order: Onorder traversal yealds keys in ascending order
+
+insertion into a 3-node at bottom:
+- add new key to 3-node to create temporary 4-node
+- move middle key of 40node into parent
+- repeat up the tree, as necessary
+- if you reach the root and it's 4-node, split it into three 2-nodes
+
+splitting 4-node takes constant number of operations: local transformation
+
+tree height:
+- worst case: log N [all 2-nodes]
+- best case: log(3)N ~ 631 log N [all 3-nodes]
+- between 12 and 20 for a million nodes
+- between 18 and 30 for a billion nodes
+
+Guaranteed logarithmic performance for search and insert!
+
+SUMMARY:
+    search:
+        - worst case: c log N
+        - average case: c log N
+    insert:
+        - worst case: c log N
+        - average case: c log N
+    delete:
+        - worst case: c log N
+        - average case: c log N
+    ordered iteration? YES
+    key interface - cpmpareTo()
+
+Implementation is complicated:
+- maintaining of multiple node types is cumbersome.
+- need multiple compares  to move down tree
+- need to move back up the tree to split 4-nodes
+- large number of cases for splitting
+
+~cumbersome [громоздкий]
+
+Could do it, but there is a better (easier) way.
+
+Q: Suppose that you are inserting a new key into a 2-3 tree. Under which one of the following scenarios must the height of the 2-3 tree increase by one?
+A: The height of a 2-3 tree increases only when the root node splits, and this happens only when every node on the search path from the root to the leaf where the new key should be inserted is a 3-node.
+
+
+
+9.2 Red-Black BSTs
+
+~lean [наклонять]
+
+left-leaned red-black BST
+- represent 2-3 tree as a BST
+- use 'internal' left-leaning links as "glue" for 3-nodes.
+~glue [клей]
+  (b d)              d
+ /  |  \   ===>    // \
+a   c   e          b   e
+                  / \
+                 a   c
+
+/ - black link
+// - red link
+
+definition:
+- No node has two red links connected to it
+- Every path from root to node link has the same number of black links (perfect black balance)
+- Red links lean left
+
+Rotaion (left/right):
+    b                d
+   / \\            // \
+  a   d    ==>     b   e
+     / \          / \
+    c   e        a   c
+
+Color flip:
+    |              ||
+    b              b
+  // \\    ==>    / \
+  a   c          a   c
+ / \ / \        / \ / \
+.  . .  .      .  . .  .
+
+
+insertion in LLRB tree:
+- mark all new links as red
+- red child red, left child black - rotate left
+- left child, left-left grandchild red - rotate right
+- both children red - flop colors
+
+whenever LLRB becomes a power of two - is completely balanced
+in both descendinag and ascending orders
+what's about random order - it is very close to log N
+
+--> height in worst case = 2 lg N
+- every path from root to null link has same number of black links
+- Never two red links in-a-row
+
+~in a row [в ряд]
+
+SUMMARY:
+    search:
+        - worst case: 2 log N
+        - average case: 1.0 log N *
+    insert:
+        - worst case: 2 log N
+        - average case: 1.0 log N *
+    delete:
+        - worst case: 2 log N
+        - average case: 1.0 log N *
+    ordered iteration? YES
+    key interface - compareTo()
+* exact value of coefficient unknown but extremely close to 1
+
+~testimony [доказательство, свидетельство, признак]
