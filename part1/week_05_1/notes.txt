@@ -122,3 +122,29 @@ SUMMARY:
 * exact value of coefficient unknown but extremely close to 1
 
 ~testimony [доказательство, свидетельство, признак]
+
+
+
+9.3 B-TREES
+
+page - contiguous blocks of memory (e.g. size = 4096)
+probe - first access to page in memory, it is slower than reading data from memory
+
+~contiguous [смежный, соседний]
+
+Idea:  Generalize 2-3 trees by allowing up to M-1 key-link pairs per node.
+- At least 2 key-link pairs at root
+- At least M/2 key-link pairs in other nodes
+- external nodes (leafs) contain client keys
+- internal nodes contain copies of keys to guide search
+--- choose M as large as possible so that M links fit in a page, e.g. M = 1024
+
+A search or an insertion in a B-tree of order M with N keys requires
+between log(M-1) N and log(M/2) N probes.
+--> All internal nodes (besides root) have between M/2 and M-1 links.
+
+In practice: Number of probes is at most 4 (M=1024, N=62 billion log(M/2) N <= 4)
+Optimization: Always kepp root page in memory
+
+
+
