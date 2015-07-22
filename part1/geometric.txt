@@ -1,0 +1,14 @@
+1D range search
+    -> BST
+
+2D orthogonal line segment intersection search
+    -> sweep line reduces to 1D range earch
+
+KD range search
+    -> KD tree
+
+1D interval search
+    -> interval search tree
+
+2D orthogonal rectangle intersection search
+    -> sweep line reduces to 1D range earch

@@ -8,3 +8,6 @@ http://cs.fit.edu/~pkc/classes/writing/samples/bentley93engineering.pdf
 
 How Tall is a Tree? -- Bruce Reed
 http://dl.acm.org/citation.cfm?id=335360&dl=ACM&coll=DL&CFID=527472238&CFTOKEN=34348188
+
+An efficient program for many-body simulation -- Andrew W. Appel
+http://repository.cmu.edu/cgi/viewcontent.cgi?article=3534&context=compsci

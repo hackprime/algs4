@@ -1,0 +1,250 @@
+10.1 1D RANGE SEARCH (8:51)
+
+
+
+10.2 LINE SEGMENT INTERSECTION (5:46)
+
+
+
+10.3 KD-TREES (29:07)
+
+2D orthogonal range search
+Extension of ordered symbol-table to 2d keys
+- insert 2d key
+- delete 2d key
+- search for 2d key
+- Range search: find all keys that lie in a 2d range.
+- Range count: number of keys that lie in a 2d range.
+
+Geometric interpretation:
+- keys are point in a plane.
+- find/count points in a given h-v (rectangle is axos-aligned) rectangle.
+Useing in networking, circuit design, databases.
+    Find all emploees whose salary is between 1000000 and 5000000 and age between 40 and 50.
+
+Implementations
+- GRID - divide space uniformly into squares
+    Grid of squares
+    - divide space between M-by-M grid of squares.
+    - create list of points contained in each square.
+    - use 2d array to directly index relevant square.
+    - INSERT: add (x, y) to list with corresponding square
+    - RANGE SEARCH: Examine only squares that intersect 2d range query
+
+    Space-time tradeoff
+    - Space: M^2 + N
+    - Time: 1 + N/M^2 per square examined, on average
+
+    Choose square size to tune performance:
+    - Too small: wasted space
+    - Too large: too any points per square
+    - Rule of thumb: sqrt(N)-by-sqrt(N) grid
+
+    Running time (if points are evenly distributed):
+    - Initialize data structure
+    - insert point: 1
+    - Range search: 1 per point in range.
+    --> In case of M ~ sqrt(N)
+
+    Summary: Fast, simple solution for evenly-distruibuted points
+
+    Problem - Clustering
+         is well-known phenomenonin geometric data:
+    - Lists are too long, even though average length is short
+    - Need data structure that adapts gracefully to data
+
+    EXAMPLE:
+    - USA map, 13k cities, 1k squares in grid
+    - half of squares are empty
+    - 50% of the points in 10% of the squares
+
+[SPACE-PARTITIONING TREES]
+
+- 2D TREE - recursivelu divide space into two halfplanes
+    Idea:
+    - inserting point as node in tree
+    - on every point draw a line, vertical and horisontal alternately
+    - insert the next point:
+        - if its on a left side or bellow from line: insert point to left subtree
+        - if its on a right side or above from line: insert point to right subtree
+
+    Data structure:
+    - BST, but alternative using x- and y- coordinates as key
+        (even level - vertical line, odd level - horizontal line)
+    - Search giver rectangle containing point
+    - insert further subdivides the plane
+
+    Range search:
+        ex: find all points in 2d tree that contained ib query rectangle
+        GOAL: find all points in a query axis-aligned rectangle
+        - check if point in node lies in given rectangle
+        - recursively search left/bottom (if any could fall in rectangle)
+        - recursively search right/top (if any could fall in rectangle)
+
+        Running time:
+        - Average case: R + log N
+        - Worst case (assumed tree is balanced): R + sqrt(N)
+
+    Nearest neighbour search:
+        GOAL: find closest point  to query point
+        - check distance from point in node to query point.
+        - recursively search left/bottom (if it could contain a closer point)
+        - recursively search right/top (if it could contain a closer point)
+        - organize method so that it begins by searching for query point.
+
+- QUADTREE - recursivelu divide space into four quadrants
+- BSP tree - recursivelu divide space into two regions
+
+~evenly distributed [Равномерно распределён]
+~gracefully [грациозно, изящно, элегантно]
+~alternately [попеременно, поочерёдно]
+~pruning [сокращение, упрощение]
+
+
+Boid (Bird-oid object) [https://en.wikipedia.org/wiki/Boids]
+Rules of complex emergent flocking behavoir.
+- Collision avoidance: point away from k nearest boids.
+- Flock centering: point towards the center of mass of k nearest boids.
+- Velocity matching: update velocity to tha average of k nearest boids.
+
+KD tree:
+- Recursively partition k-dimentional space into 2 halfspaces
+
+Implementation:
+    BST, but cycle through dimentions ala 2d trees
+
+            ____________(p)_____________
+           /                            \
+          /       level = i (mod k)      \
+      points                            points
+    whose ith                          whose ith
+    coordinate                         coordinate
+ is less than p's                 is greatere than p's
+
+Efficient, simple data structure for processing l-dimentional data:
+- widely used
+- adapts well to high dimentional and cluster data
+
+N-BODY SIMULATION
+Goal: simulate the motion of N particles, mutually affected by gravity
+~mutually [обоюдно, взаимно]
+
+Brute force: for each pair of particles, compute force: F = (G * m1 * m2) / r^2
+
+Key idea: Suppose particle is far, far away from cluster of particles
+- treat cluster of particleas as a simple aggregate particle.
+- compute force between particle and center of mass of aggregate.
+
+Algorythm:
+- build 3d tree with N particles as nodes.
+- store center-of-mass of subtree in each node.
+- to compute total force acting on a particle, traverse tree, but stop
+  as soon as distance from particle to subdivision is sufficiently large.
+
+
+
+10.4 INTERVAL SEARCH TREES (13:47)
+
+1d interval search
+- insert an interval (lo, hi)
+- search for an interval (lo, hi)
+- delete an interval (lo, hi)
+- INTERVAL INTERSECTION QUERY: given an interval (lo, hi), find all intervals
+  (or one interval) in date structure that intersects (lo, hi)
+
+~nondegeneracy assumotion [предположение о невырожденности]
+
+Nondegeneracy assumotion: No two intervals have the same left endpoint.
+
+Create BST, where each node stores an interval (lo, hi)
+    - Use left endpoint as BST key
+    - store max endpoint in subtree rooted at node
+
+INSERT (lo, hi):
+- insert into BST: using lo as the key
+- update max in each node on search path
+
+SEARCH (lo, ho):
+- if interval in node intersects query interval, return it.
+- else if left subtree is null, go right.
+- else if max endpoint in left subtree is less than lo, go right.
+- else go left. (if ypu did not go right - go left)
+
+If search goes right then no intersection in left.
+- left subtree is empty - trivial
+- max endpoint MAX in left subtree is less than lo
+  for any interval (a, b) in left subtree of x
+  wee hab b <= MAX <= lo
+  * b - definition of MAX
+  * MAX - reason for going right
+
+if search goes left, then there is either an intersection in left subtree.
+or no intersections in either.
+- since go left we have lo <= max
+- Then for any interval (a, b) in right subtree of x
+  hi < c <= a --> no intersection in right
+  * hi - no intersection in left subtree
+  * c - intervals sorted by left endpoint
+
+~ in either [и в том, и в другом случае]
+
+Implementation: Use a red-black BST to guarantee performance.
+    easy to maintain auxilary information using log N extra work per operation
+
++---------------------------+----------------------+------------------------+----------------------+
+|        operation          |         brute        |   interval search tree |    best in theory    |
++---------------------------+----------------------+------------------------+----------------------+
+|  inser interval           |           1          |         log N          |         log N        |
++---------------------------+----------------------+------------------------+----------------------+
+|  find interval            |           N          |         log N          |         log N        |
++---------------------------+----------------------+------------------------+----------------------+
+|  delete interval          |           N          |         log N          |         log N        |
++---------------------------+----------------------+------------------------+----------------------+
+|  find any one interval    |           N          |         log N          |         log N        |
+|  that intersects (lo, hi) |                      |                        |                      |
++---------------------------+----------------------+------------------------+----------------------+
+|  find all intervals       |           N          |        R log N         |       R + log N      |
+|  that intersects (lo, hi) |                      |                        |                      |
++---------------------------+----------------------+------------------------+----------------------+
+
+
+
+10.5 RECTANGLE INTERSECTION (8:10)
+
+Orthogonal rectangle intersection search
+
+Goal: Find all intersections among a set of N orthogonal rectangles.
+Quadratic algorythm: check all pairs of rectangles for intersection
+Nondegeneracy assumprion: All x- and y-coordinates are distinct
+
+Moore's law: Processing power doubles every 18 months.
+--> linearythmic algorythm is required to sustain Moore's law
+
+~sustain [выдерживать, быть опорой]
+~sweep [отбосить]
+
+Implementation: sweep-line algorythm
+    Sweep vertical line from left to right
+    - x-coordinats of left and right endpoints define events.
+    - maintain the set of rectangles that intersect the sweep line in a interval search tree
+      (using y-intervals of rectangle)
+    - Left endpoint: interval search for y-interval of rectangle; insert y-interval.
+    - right endpoint: remove y-interval.
+
+==> Sweep line algorythm takes time proportional to N log N + R log N to find R interactions among a set of N rectangles
+    - put x coord on PQ (or sort) - N log N
+    - insert y-intervals to ST - N log N
+    - delete y-intervals from ST - N log N
+    - interval searches for y-interval - N log N + R log N
+==> Sweep line reduces 2D orthogonal rectangle intersection search to 1D interval search
+
+~concordance [согласие]
+~sparse [редкий, неплотный; разбросанный, рассеянный]
+
+=====================================
+Sparse matrix-vector multiplacation
+sparse mitrix  - matrix that contains very low count of non-zero elements
+====================================
+---
+
+
