@@ -1,8 +1,82 @@
-10.1 1D RANGE SEARCH (8:51)
+Geometry tasks:
+    How many points in rectangle?
+        -> orthogonal range search
+    How many intersects in given set of rectangles?
+        -> orthogomal rectangle search
+
+Efficient solution: BINARY SEARCH TREE (and extensions)
+
+
+
+10.1 1D RANGE SEARCH  (8:51)
+
+Extension of ordered symbol table:
+- insert key-value pair
+- Search for key k
+delete key k
+RANGE SEARCH: find all keys between k1 and k2
+RANGE COUNT: number of keys between k1 and k2
+
+Example: database queries [find all car adverts with year made between 1999 and 2010]
+
+Geometric interpretation:
+- Keys are points on a line
+- Find/count points in a given 1D (one dimension) interval
+
+Implementations:
+- array
+    ORDER OF GROW of running time for 1d range search
+    Unordered array:
+        - insert: 1
+        - range count: N
+        - range search: N
+    Ordered array:
+        - insert: N
+        - range count: log N
+        - range search: R + log N
+    Goal:
+        - insert: log N
+        - range count: log N
+        - range search: R + log N
+    * N = number of keys
+    * R = number of keys that match
+- BST
+    RANGE COUNT
+    rank of node - how many nodes is less than current
+    Range count = rank of greather node (k2) - rank of lesser node (k1)
+    Range count += 1 if k2 entry in the range query in the table
+    -- Running time proportional to log N
+
+    RANGE SEARCH
+    - find all keys between k2 and k1
+    - recursively find all keys in left subtree (if any could fall in range)
+    - check key in current node
+    - recursively find all keys in right subtree (if any could fall in range)
 
 
 
 10.2 LINE SEGMENT INTERSECTION (5:46)
+
+Given N horizontal and vertical line segments, find all intersections.
+
+Brute Force: check all pairs of line segments for intersection (quadratic).
+~nondegeneracy [невырожденность]
+Nondegeneracy assumption: All x- an dy-coordinates are distinct.
+
+>> ORTOGONAL LINE SEGMANT INTERSECTION SEARCH <<
+[sweep line algorythm]
+~sweep [сносить, сметать, уничтожать]
+
+Idea: sweep vertical line from left to right
+- x-coordinates define events
+    > Sweep from left to right against x-coordinate (what's the next x coordinate).
+- h-segment (left endpoint): insert y-coordinates into BST.
+- h-segment (right endpoint): remove y-coordinates from BST.
+- v-segment: range search for interval of y-endpoints.
+    > Range search between y-coordinates of vertical line points
+
+-- The sweep-line algorythm takes time proportional to N log N + R to find all R intersections among N orthogonal line segment
+-- Sweep line reduces 2D orthogonal line segment intersection search to 1d range search
 
 
 
@@ -245,6 +319,3 @@ Implementation: sweep-line algorythm
 Sparse matrix-vector multiplacation
 sparse mitrix  - matrix that contains very low count of non-zero elements
 ====================================
----
-
-
