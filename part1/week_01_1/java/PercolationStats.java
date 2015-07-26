@@ -9,7 +9,6 @@ public class PercolationStats {
         if (N < 1 || T < 1) {
             throw new IllegalArgumentException();
         }
-
         n = N;
         t = T;
         thresholds = new double[T];
@@ -17,7 +16,7 @@ public class PercolationStats {
             thresholds[i] = getThreshold();
         }
     }
-    public double getThreshold() {
+    private double getThreshold() {
         // test client (optional)
         int i, j, k;
         int sitesCount = n * n;
@@ -40,7 +39,7 @@ public class PercolationStats {
                 break;
             }
         }
-        return (double)k / (double)sitesCount;
+        return (double) k / (double) sitesCount;
     }
     public double mean() {
         // sample mean of percolation threshold
@@ -71,13 +70,16 @@ public class PercolationStats {
     }
 
     public static void main(String[] args) {
+        if (args.length < 2) {
+            throw new IllegalArgumentException();
+        }
         int N = Integer.parseInt(args[0]);
         int T = Integer.parseInt(args[1]);
 
-        // test client (described below)
         PercolationStats ps = new PercolationStats(N, T);
         StdOut.println("mean" + "\t" + ps.mean());
         StdOut.println("stddev" + "\t" + ps.stddev());
-        StdOut.println("95% confidence interval" + "\t" + ps.confidenceLo() + " " + ps.confidenceHi());
+        StdOut.println("95% confidence interval" + "\t"
+                       + ps.confidenceLo() + " " + ps.confidenceHi());
     }
 }
