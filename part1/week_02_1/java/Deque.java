@@ -13,34 +13,131 @@
 // currently in the deque. Additionally, your iterator implementation must support
 // each operation (including construction) in constant worst-case time.
 
+import java.util.Iterator;
 
 public class Deque<Item> implements Iterable<Item> {
+    private Node<Item> first;
+    private Node<Item> last;
+    private int count;
+
+    private class Node<Item> {
+        public Item item;
+        public Node<Item> next;
+        public Node<Item> prev;
+
+        public Node(Item item, Node<Item> next, Node<Item> prev) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
+    private class ListIterator implements Iterator<Item> {
+        private Node<Item> current = first;
+        public boolean hasNext() {
+            return current != null;
+        }
+        public Item next() {
+            Item item = current.item;
+            current = current.next;
+            return item;
+        }
+        public void remove() {
+            throw new java.lang.UnsupportedOperationException();
+        }
+    }
+
+
     public Deque() {
         // construct an empty deque
+        count = 0;
+        first = null;
+        last = null;
     }
     public boolean isEmpty() {
         // is the deque empty?
+        return first == null;
     }
     public int size() {
         // return the number of items on the deque
+        return count;
     }
     public void addFirst(Item item) {
         // add the item to the front
+        if (item == null) {
+            throw new java.lang.NullPointerException();
+        }
+        Node<Item> oldfirst = first;
+        first = new Node<Item>(item, oldfirst, null);
+        if (oldfirst != null) {
+            oldfirst.prev = first;
+        }
+        count++;
     }
     public void addLast(Item item) {
         // add the item to the end
+        if (item == null) {
+            throw new java.lang.NullPointerException();
+        }
+        Node<Item> oldlast = last;
+        last = new Node<Item>(item, null, oldlast);
+        if (oldlast != null) {
+            oldlast.next = last;
+        }
+        count++;
     }
     public Item removeFirst() {
         // remove and return the item from the front
+        if (isEmpty()) {
+            throw new java.lang.NullPointerException();
+        }
+        Item item = first.item;
+        if (first.next == null) {
+            last = first = null;
+        } else {
+            first.next.prev = null;
+        }
+        first = first.next;
+        count--;
+        return item;
     }
     public Item removeLast() {
         // remove and return the item from the end
+        if (isEmpty()) {
+            throw new java.lang.NullPointerException();
+        }
+        Item item = last.item;
+        if (last.prev == null) {
+            last = first = null;
+        } else {
+            last.prev.next = null;
+        }
+        last = last.prev;
+
+        count--;
+        return item;
     }
     public Iterator<Item> iterator() {
         // return an iterator over items in order from front to end
+        return new ListIterator();
     }
 
     public static void main(String[] args) {
-        // unit testing
+        Deque<String> d = new Deque<String>();
+
+        while(!StdIn.isEmpty()) {
+            String s = StdIn.readString();
+            System.out.println(s);
+            d.addFirst(s);
+        }
+        // d.removeFirst();
+        // d.addFirst("fuck");
+        // d.removeLast();
+        d.addLast("asshole");
+
+        System.out.println("result");
+        for (String s : d) {
+            System.out.println(s);
+        }
     }
 }
