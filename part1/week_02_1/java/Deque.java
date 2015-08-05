@@ -1,17 +1,25 @@
-// Dequeue. A double-ended queue or deque (pronounced "deck") is a generalization of a stack
-// and a queue that supports adding and removing items from either the front or the back
-// of the data structure. Create a generic data type Deque that implements the following API.
+// Dequeue. A double-ended queue or deque (pronounced "deck")
+// is a generalization of a stack and a queue that supports adding
+// and removing items from either the front or the back
+// of the data structure. Create a generic data type Deque
+// that implements the following API.
 
-// Corner cases. Throw a java.lang.NullPointerException if the client attempts to add a null item;
-// throw a java.util.NoSuchElementException if the client attempts to remove an item
-// from an empty deque; throw a java.lang.UnsupportedOperationException if the client
-// calls the remove() method in the iterator; throw a java.util.NoSuchElementException
-// if the client calls the next() method in the iterator and there are no more items to return.
+// Corner cases.
+// - Throw a java.lang.NullPointerException
+//   if the client attempts to add a null item;
+// - throw a java.util.NoSuchElementException
+//   if the client attempts to remove an item from an empty deque;
+// - throw a java.lang.UnsupportedOperationException
+//   if the client calls the remove() method in the iterator;
+// - throw a java.util.NoSuchElementException if the client calls the next()
+//   method in the iterator and there are no more items to return.
 
-// Performance requirements. Your deque implementation must support each deque operation
-// in constant worst-case time and use space proportional to the number of items
-// currently in the deque. Additionally, your iterator implementation must support
-// each operation (including construction) in constant worst-case time.
+// Performance requirements.
+// - Your deque implementation must support each deque operation
+//   in constant worst-case time and use space proportional to the number of items
+//   currently in the deque.
+// - Additionally, your iterator implementation must support each operation
+//   (including construction) in constant worst-case time.
 
 import java.util.Iterator;
 
@@ -21,9 +29,9 @@ public class Deque<Item> implements Iterable<Item> {
     private int count;
 
     private class Node<Item> {
-        public Item item;
-        public Node<Item> next;
-        public Node<Item> prev;
+        private Item item;
+        private Node<Item> next;
+        private Node<Item> prev;
 
         public Node(Item item, Node<Item> next, Node<Item> prev) {
             this.item = item;
@@ -93,7 +101,8 @@ public class Deque<Item> implements Iterable<Item> {
         }
         Item item = first.item;
         if (first.next == null) {
-            last = first = null;
+            last = null;
+            first = null;
         } else {
             first.next.prev = null;
         }
@@ -108,7 +117,8 @@ public class Deque<Item> implements Iterable<Item> {
         }
         Item item = last.item;
         if (last.prev == null) {
-            last = first = null;
+            last = null;
+            first = null;
         } else {
             last.prev.next = null;
         }
@@ -125,7 +135,7 @@ public class Deque<Item> implements Iterable<Item> {
     public static void main(String[] args) {
         Deque<String> d = new Deque<String>();
 
-        while(!StdIn.isEmpty()) {
+        while (!StdIn.isEmpty()) {
             String s = StdIn.readString();
             System.out.println(s);
             d.addFirst(s);
