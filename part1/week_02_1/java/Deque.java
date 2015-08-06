@@ -39,7 +39,6 @@ public class Deque<Item> implements Iterable<Item> {
             this.prev = prev;
         }
     }
-
     private class ListIterator implements Iterator<Item> {
         private Node<Item> current = first;
         public boolean hasNext() {
@@ -54,8 +53,6 @@ public class Deque<Item> implements Iterable<Item> {
             throw new java.lang.UnsupportedOperationException();
         }
     }
-
-
     public Deque() {
         // construct an empty deque
         count = 0;
@@ -75,10 +72,13 @@ public class Deque<Item> implements Iterable<Item> {
         if (item == null) {
             throw new java.lang.NullPointerException();
         }
-        Node<Item> oldfirst = first;
-        first = new Node<Item>(item, oldfirst, null);
-        if (oldfirst != null) {
-            oldfirst.prev = first;
+        Node<Item> newnode = new Node<Item>(item, first, null);
+        if (first != null) {
+            first.prev = newnode;
+        }
+        first = newnode;
+        if (last == null) {
+            last = first;
         }
         count++;
     }
@@ -87,10 +87,13 @@ public class Deque<Item> implements Iterable<Item> {
         if (item == null) {
             throw new java.lang.NullPointerException();
         }
-        Node<Item> oldlast = last;
-        last = new Node<Item>(item, null, oldlast);
-        if (oldlast != null) {
-            oldlast.next = last;
+        Node<Item> newnode = new Node<Item>(item, null, last);
+        if (last != null) {
+            last.next = newnode;
+        }
+        last = newnode;
+        if (first == null) {
+            first = last;
         }
         count++;
     }
@@ -131,23 +134,23 @@ public class Deque<Item> implements Iterable<Item> {
         // return an iterator over items in order from front to end
         return new ListIterator();
     }
-
     public static void main(String[] args) {
         Deque<String> d = new Deque<String>();
 
-        while (!StdIn.isEmpty()) {
-            String s = StdIn.readString();
-            System.out.println(s);
-            d.addFirst(s);
-        }
-        // d.removeFirst();
-        // d.addFirst("fuck");
-        // d.removeLast();
-        d.addLast("asshole");
+        if (!StdIn.isEmpty()) {
+            while(!StdIn.isEmpty()) {
+                String s = StdIn.readString();
+                d.addFirst(s);
+            }
+            d.removeFirst();
+            d.addFirst("one");
+            d.removeLast();
+            d.addLast("three");
 
-        System.out.println("result");
-        for (String s : d) {
-            System.out.println(s);
+            System.out.println("result size: " + d.size());
+            for (String s : d) {
+                System.out.println(s);
+            }
         }
     }
 }

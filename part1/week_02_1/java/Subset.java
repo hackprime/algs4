@@ -21,9 +21,21 @@
 // (For an extra challenge, use only one Deque or RandomizedQueue object of maximum size at most k.)
 // It should have the following API.
 
+// echo A B C D E F G H I | java -cp $CLASSPATH:`pwd` Subset 3
+
 
 public class Subset {
     public static void main(String[] args) {
+        int k = Integer.parseInt(args[0]);
+        RandomizedQueue<String> structure = new RandomizedQueue<String>();
 
+        while(!StdIn.isEmpty()) {
+            String s = StdIn.readString();
+            structure.enqueue(s);
+        }
+
+        for (int i = 0; i < k; i++) {
+            StdOut.println(structure.dequeue());
+        }
     }
 }
