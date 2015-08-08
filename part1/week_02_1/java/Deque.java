@@ -138,7 +138,7 @@ public class Deque<Item> implements Iterable<Item> {
         Deque<String> d = new Deque<String>();
 
         if (!StdIn.isEmpty()) {
-            while(!StdIn.isEmpty()) {
+            while (!StdIn.isEmpty()) {
                 String s = StdIn.readString();
                 d.addFirst(s);
             }

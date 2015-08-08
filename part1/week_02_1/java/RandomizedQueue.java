@@ -1,26 +1,30 @@
-// Randomized queue. A randomized queue is similar to a stack or queue, except that the item
-// removed is chosen uniformly at random from items in the data structure.
-// Create a generic data type RandomizedQueue that implements the following API
+// Randomized queue. A randomized queue is similar to a stack or queue,
+// except that the item removed is chosen uniformly at random from items
+// in the data structure. Create a generic data type RandomizedQueue
+// that implements the following API
 
 // Corner cases.
 // - The order of two or more iterators to the same randomized queue
 //   must be mutually independent; each iterator must maintain its own random order.
-// - Throw a java.lang.NullPointerException if the client attempts to add a null item;
-// - throw a java.util.NoSuchElementException if the client attempts to sample or dequeue an item
-//   from an empty randomized queue;
-// - throw a java.lang.UnsupportedOperationException if the client calls the remove() method
-//   in the iterator;
-// - throw a java.util.NoSuchElementException if the client calls the next() method in the iterator
-//   and there are no more items to return.
+// - Throw a java.lang.NullPointerException
+//   if the client attempts to add a null item;
+// - throw a java.util.NoSuchElementException if the client attempts to sample
+//   or dequeue an item from an empty randomized queue;
+// - throw a java.lang.UnsupportedOperationException
+//   if the client calls the remove() method in the iterator;
+// - throw a java.util.NoSuchElementException if the client calls the next() method
+//   in the iterator and there are no more items to return.
 
 // Performance requirements.
-// - Your randomized queue implementation must support each randomized queue operation
-//   (besides creating an iterator) in constant amortized time and use space
-//   proportional to the number of items currently in the queue.
-//   That is, any sequence of M randomized queue operations (starting from an empty queue)
-//   should take at most cM steps in the worst case, for some constant c.
-// - Additionally, your iterator implementation must support operations next() and hasNext()
-//   in constant worst-case time; and construction in linear time; you may use a linear
+// - Your randomized queue implementation must support each randomized
+//   queue operation (besides creating an iterator) in constant amortized time
+//   and use space proportional to the number of items currently in the queue.
+//   That is, any sequence of M randomized queue operations
+//   (starting from an empty queue) should take at most cM steps in the worst case,
+//   for some constant c.
+// - Additionally, your iterator implementation must support operations next()
+//   and hasNext() in constant worst-case time; and construction in linear time;
+//   you may use a linear
 //   amount of extra memory per iterator.
 
 // java -cp $CLASSPATH:`pwd` RandomizedQueue
@@ -33,9 +37,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private Node<Item> last;
     private int count;
     private class Node<Item> {
-        public Item item;
-        public Node<Item> next;
-        public Node<Item> prev;
+        private Item item;
+        private Node<Item> next;
+        private Node<Item> prev;
 
         public Node(Item item, Node<Item> next, Node<Item> prev) {
             this.item = item;
@@ -43,6 +47,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             this.prev = prev;
         }
     }
+
     private class RandomListIterator implements Iterator<Item> {
         private int current = 0;
         private int[] order;
@@ -68,6 +73,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new java.lang.UnsupportedOperationException();
         }
     }
+    public RandomizedQueue() {
+        // construct an empty randomized queue
+        count = 0;
+        first = null;
+        last = null;
+    }
     private Node<Item> randomNode() {
         return getNode(StdRandom.uniform(0, count));
     }
@@ -80,12 +91,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
         return node;
     }
-    public RandomizedQueue() {
-        // construct an empty randomized queue
-        count = 0;
-        first = null;
-        last = null;
-    }
+
     public boolean isEmpty() {
         // is the queue empty?
         return count == 0;
