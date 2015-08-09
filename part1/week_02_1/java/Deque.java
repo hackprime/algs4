@@ -24,27 +24,27 @@
 import java.util.Iterator;
 
 public class Deque<Item> implements Iterable<Item> {
-    private Node<Item> first;
-    private Node<Item> last;
+    private Node first;
+    private Node last;
     private int count;
 
-    private class Node<Item> {
+    private class Node {
         private Item item;
-        private Node<Item> next;
-        private Node<Item> prev;
-
-        public Node(Item item, Node<Item> next, Node<Item> prev) {
-            this.item = item;
-            this.next = next;
-            this.prev = prev;
-        }
+        private Node next;
+        private Node prev;
     }
     private class ListIterator implements Iterator<Item> {
-        private Node<Item> current = first;
+        private Node current;
+        public ListIterator(Node initialNode) {
+            current = initialNode;
+        }
         public boolean hasNext() {
             return current != null;
         }
         public Item next() {
+            if (!hasNext()) {
+                throw new java.util.NoSuchElementException();
+            }
             Item item = current.item;
             current = current.next;
             return item;
@@ -72,13 +72,16 @@ public class Deque<Item> implements Iterable<Item> {
         if (item == null) {
             throw new java.lang.NullPointerException();
         }
-        Node<Item> newnode = new Node<Item>(item, first, null);
-        if (first != null) {
-            first.prev = newnode;
-        }
-        first = newnode;
-        if (last == null) {
+        if (count == 0) {
+            first = new Node();
+            first.item = item;
             last = first;
+        } else {
+            Node oldfirst = first;
+            first = new Node();
+            first.item = item;
+            first.next = oldfirst;
+            oldfirst.prev = first;
         }
         count++;
     }
@@ -87,8 +90,10 @@ public class Deque<Item> implements Iterable<Item> {
         if (item == null) {
             throw new java.lang.NullPointerException();
         }
-        Node<Item> newnode = new Node<Item>(item, null, last);
+        Node newnode = new Node();
+        newnode.item = item;
         if (last != null) {
+            newnode.prev = last;
             last.next = newnode;
         }
         last = newnode;
@@ -100,23 +105,23 @@ public class Deque<Item> implements Iterable<Item> {
     public Item removeFirst() {
         // remove and return the item from the front
         if (isEmpty()) {
-            throw new java.lang.NullPointerException();
+            throw new java.util.NoSuchElementException();
         }
         Item item = first.item;
-        if (first.next == null) {
+        if (count == 1) {
             last = null;
             first = null;
         } else {
             first.next.prev = null;
+            first = first.next;
         }
-        first = first.next;
         count--;
         return item;
     }
     public Item removeLast() {
         // remove and return the item from the end
         if (isEmpty()) {
-            throw new java.lang.NullPointerException();
+            throw new java.util.NoSuchElementException();
         }
         Item item = last.item;
         if (last.prev == null) {
@@ -124,33 +129,13 @@ public class Deque<Item> implements Iterable<Item> {
             first = null;
         } else {
             last.prev.next = null;
+            last = last.prev;
         }
-        last = last.prev;
-
         count--;
         return item;
     }
     public Iterator<Item> iterator() {
         // return an iterator over items in order from front to end
-        return new ListIterator();
-    }
-    public static void main(String[] args) {
-        Deque<String> d = new Deque<String>();
-
-        if (!StdIn.isEmpty()) {
-            while (!StdIn.isEmpty()) {
-                String s = StdIn.readString();
-                d.addFirst(s);
-            }
-            d.removeFirst();
-            d.addFirst("one");
-            d.removeLast();
-            d.addLast("three");
-
-            System.out.println("result size: " + d.size());
-            for (String s : d) {
-                System.out.println(s);
-            }
-        }
+        return new ListIterator(first);
     }
 }
