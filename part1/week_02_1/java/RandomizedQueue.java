@@ -29,112 +29,127 @@
 
 // java -cp $CLASSPATH:`pwd` RandomizedQueue
 
+// structure
+//     array
+
+// grow order
+//     double size of array is array is full
+
+// shrink
+//     halve size if actual array size equals N/3
+
+// randomized dequeue
+//     uniformly pop an item from array and set array cell to null
+//     if uniformly seelted array cell is null ->
+//         move to next element until not null of tail is reached
+//         if tail is reached -> move left using the same way
 
 import java.util.Iterator;
 
-public class RandomizedQueue<Item> implements Iterable<Item> {
-    private Node first;
-    private int count;
+public class ArrayRandomizedQueue<Item> implements Iterable<Item> {
+    private int size;
+    private int capacity;
+    private Item[] array;
 
-    private class Node {
-        private Item item;
-        private Node next;
-        private Node prev;
+    public ArrayRandomizedQueue() {
+        array = (Item[]) new Object[1];
+        size = 0;
+        capacity = 1;
     }
 
     private class RandomListIterator implements Iterator<Item> {
-        private int current = 0;
+        private int current;
+        private int initialSize;
         private int[] order;
-        private Item[] items;
 
         public RandomListIterator() {
-            items = (Item[]) new Object[size()];
-            Node node = first;
-            int i = 0;
-            while (node != null) {
-                items[i++] = node.item;
-                node = node.next;
+            initialSize = size;
+            current = 0;
+            order = new int[size];
+            for (int i = 0; i < size; i++) {
+                order[i] = i;
             }
-            StdRandom.shuffle(items);
+            StdRandom.shuffle(order);
         }
-
         public boolean hasNext() {
-            return current < count;
+            return current < size;
         }
-
         public Item next() {
             if (!hasNext()) {
                 throw new java.util.NoSuchElementException();
             }
-            return items[current++];
+            Item item = array[order[current]];
+            if (size() != initialSize) {
+                throw new java.util.ConcurrentModificationException();
+            }
+            current++;
+            return item;
         }
-
         public void remove() {
             throw new java.lang.UnsupportedOperationException();
         }
     }
 
-    public RandomizedQueue() {
-        // construct an empty randomized queue
-        count = 0;
-        first = null;
-    }
-
-    private Node randomNode() {
-        int randomIndex = StdRandom.uniform(0, count);
-        int currentIndex = 0;
-        Node node = first;
-        while (currentIndex < randomIndex) {
-            node = node.next;
-            currentIndex++;
+    private void shrinkCapacity() {
+        capacity /= 2;
+        Item[] newArray = (Item[]) new Object[capacity / 2];
+        int i = 0;
+        for (Item item : array) {
+            newArray[i++] = item;
         }
-        return node;
+        array = newArray;
     }
 
-    public boolean isEmpty() {
-        // is the queue empty?
-        return count == 0;
+    private void expandCapacity() {
+        capacity *= 2;
+        Item[] newArray = (Item[]) new Object[capacity];
+        for (int i = 0; i <= size; i++) {
+            newArray[i] = array[i];
+        }
+        array = newArray;
     }
 
     public int size() {
-        // return the number of items on the queue
-        return count;
+        return size;
     }
 
     public void enqueue(Item item) {
-        // add the item
         if (item == null) {
             throw new java.lang.NullPointerException();
         }
-        Node newnode = new Node();
-        newnode.item = item;
-        newnode.next = first;
-        first = newnode;
-        count++;
+        if (size + 1 == capacity) {
+            expandCapacity();
+        }
+        array[size++] = item;
     }
 
     public Item dequeue() {
-        // remove and return a random item
-        if (count == 0) {
+       // remove and return a random item
+        if (size == 0) {
             throw new java.util.NoSuchElementException();
         }
-        Node node = randomNode();
-        if (node.prev != null) {
-            node.prev.next = node.next;
+        int randomIndex = StdRandom.uniform(0, size);
+        Item item = array[randomIndex];
+        size--;
+        array[randomIndex] = array[size];
+        array[size] = null;
+
+        if (capacity / 2 == size) {
+            shrinkCapacity();
         }
-        if (node.next != null) {
-            node.next.prev = node.prev;
-        }
-        count--;
-        return node.item;
+        return item;
+    }
+
+    public boolean isEmpty() {
+        return size() == 0;
     }
 
     public Item sample() {
         // return (but do not remove) a random item
-        if (count == 0) {
+        if (size() == 0) {
             throw new java.util.NoSuchElementException();
         }
-        return randomNode().item;
+        return array[StdRandom.uniform(0, size)];
     }
 
     public Iterator<Item> iterator() {
@@ -143,17 +158,21 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        RandomizedQueue<String> rq = new RandomizedQueue<String>();
+        ArrayRandomizedQueue<String> rq = new ArrayRandomizedQueue<String>();
 
         System.out.println("-isempty " + rq.isEmpty());
 
         rq.enqueue("one");
         rq.enqueue("two");
         rq.enqueue("three");
-        rq.enqueue("fout");
+        rq.enqueue("four");
         System.out.println("-initial " + rq.size());
 
         System.out.println("-dequeue " + rq.dequeue());
+
+        for (String s : rq) {
+            System.out.println("  " + s);
+        }
 
         System.out.println("-dequeued size " + rq.size());
 
