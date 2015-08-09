@@ -29,6 +29,9 @@
 
 // java -cp $CLASSPATH:`pwd` RandomizedQueue
 
+// more clever and fail-safe solution.
+// https://github.com/sparkoo/coursera/blob/master/Deque/src/RandomizedQueue.java
+
 // structure
 //     array
 
@@ -46,12 +49,12 @@
 
 import java.util.Iterator;
 
-public class ArrayRandomizedQueue<Item> implements Iterable<Item> {
+public class RandomizedQueue<Item> implements Iterable<Item> {
     private int size;
     private int capacity;
     private Item[] array;
 
-    public ArrayRandomizedQueue() {
+    public RandomizedQueue() {
         array = (Item[]) new Object[1];
         size = 0;
         capacity = 1;
@@ -72,7 +75,7 @@ public class ArrayRandomizedQueue<Item> implements Iterable<Item> {
             StdRandom.shuffle(order);
         }
         public boolean hasNext() {
-            return current < size;
+            return current < size || size == 0;
         }
         public Item next() {
             if (!hasNext()) {
@@ -158,7 +161,7 @@ public class ArrayRandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        ArrayRandomizedQueue<String> rq = new ArrayRandomizedQueue<String>();
+        RandomizedQueue<String> rq = new RandomizedQueue<String>();
 
         System.out.println("-isempty " + rq.isEmpty());
 
