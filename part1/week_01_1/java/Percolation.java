@@ -3,9 +3,10 @@
 // 15:50
 public class Percolation {
     private int n;
-    private int topSite;
-    private int bottomSite;
-    private boolean[][] sites;
+    private boolean percolated;
+    private boolean[] sites;
+    private boolean[] linkedWithTop;
+    private boolean[] linkedWithBottom;
     private WeightedQuickUnionUF uf;
 
     public Percolation(int N) {
@@ -14,17 +15,18 @@ public class Percolation {
             throw new IllegalArgumentException();
         }
 
+        percolated = false;
         n = N;
-        uf = new WeightedQuickUnionUF(N * N + 2);
-        bottomSite = 0;
-        topSite = N * N + 1;
-        sites = new boolean[n][];
+        int count = N * N;
+        uf = new WeightedQuickUnionUF(N * N + 1);
+        sites = new boolean[count + 1];
+        linkedWithTop = new boolean[count + 1];
+        linkedWithBottom = new boolean[count + 1];
 
-        for (int i = 0; i < n; i++) {
-            sites[i] = new boolean[n];
-            for (int j = 0; j < n; j++) {
-                sites[i][j] = false;
-            }
+        for (int i = 1; i <= count; i++) {
+            sites[i] = false;
+            linkedWithTop[i] = i >= 1 && i <= n;
+            linkedWithBottom[i] = i >= count - n && i <= count;
         }
     }
 
@@ -33,16 +35,29 @@ public class Percolation {
             throw new IndexOutOfBoundsException();
         }
     }
+    private void union(int p, int q) {
+        int pTreeTop = uf.find(p);
+        int qTreeTop = uf.find(q);
+        boolean hasTop = linkedWithTop[pTreeTop] || linkedWithTop[qTreeTop];
+        boolean hasBottom = linkedWithBottom[pTreeTop] || linkedWithBottom[qTreeTop];
+        uf.union(p, q);
+        int newTop = uf.find(p);
+        linkedWithTop[newTop] = hasTop;
+        linkedWithTop[newTop] = hasBottom;
+        if (hasTop && hasBottom) {
+            percolated = true;
+        }
+    }
     private void checkNodesAround(int i, int j) {
         int itemIndex = ijToIndex(i, j);
         if (i > 1 && isOpen(i - 1, j))
-            uf.union(itemIndex, ijToIndex(i - 1, j)); // bottom
+            union(itemIndex, ijToIndex(i - 1, j)); // bottom
         if (i < n && isOpen(i + 1, j))
-            uf.union(itemIndex, ijToIndex(i + 1, j)); // top
+            union(itemIndex, ijToIndex(i + 1, j)); // top
         if (j > 1 && isOpen(i, j - 1))
-            uf.union(itemIndex, ijToIndex(i, j - 1)); // left
+            union(itemIndex, ijToIndex(i, j - 1)); // left
         if (j < n && isOpen(i, j + 1))
-            uf.union(itemIndex, ijToIndex(i, j + 1)); // right
+            union(itemIndex, ijToIndex(i, j + 1)); // right
     }
     private int ijToIndex(int i, int j) {
         return n * (i - 1) + j;
@@ -53,27 +68,22 @@ public class Percolation {
         // open site (row i, column j) if it is not open already
         checkArgs(i, j);
         int index = ijToIndex(i, j);
-        sites[i - 1][j - 1] = true;
+        sites[index] = true;
         checkNodesAround(i, j);
-        if (i == 1) uf.union(index, topSite);
-        if (i == n) uf.union(index, bottomSite);
-
     }
     public boolean isOpen(int i, int j) {
         // is site (row i, column j) open?
         checkArgs(i, j);
-
-        return sites[i - 1][j - 1];
+        return sites[ijToIndex(i, j)];
     }
     public boolean isFull(int i, int j) {
         // is site (row i, column j) full?
         checkArgs(i, j);
-
-        return uf.connected(topSite, ijToIndex(i, j));
+        return linkedWithTop[uf.find(ijToIndex(i, j))];
     }
     public boolean percolates() {
         // does the system percolate?
-        return uf.connected(topSite, bottomSite);
+        return percolated;
     }
 
     public static void main(String[] args) {
@@ -100,6 +110,7 @@ public class Percolation {
             percolation.open(i + 1, j + 1);
             k++;
             if (percolation.percolates()) {
+                System.out.println("System percolates at " + k + " opened site");
                 break;
             }
         }

@@ -56,7 +56,8 @@ public class PercolationStats {
         double sum = 0;
         double mean = mean();
         for (int i = 0; i < t; i++) {
-            sum = sum + Math.pow(thresholds[i] - mean, 2);
+            double delta = thresholds[i] - mean;
+            sum = sum + delta * delta;
         }
         return sum / (t - 1);
     }
