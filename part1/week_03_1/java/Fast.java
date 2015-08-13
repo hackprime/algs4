@@ -1,12 +1,11 @@
 import java.util.Arrays;
 
 public class Fast {
-    public static void drawCollinear(int endIndex, int count, Point point, Point[] sortedPoints) {
-        Point[] resPoints = new Point[count];
-        for (int k = endIndex - count + 1; k <= endIndex; k++) {
-            ////////////////////////////
-            point.drawTo(sortedPoints[k]);
-            StdOut.print(" --> " + sortedPoints[k]);
+    public static void drawCollinear(int index, int count, Point point, Point[] sortedPoints) {
+        StdOut.print(point);
+        for (int k = 0; k < count; k++) {
+            point.drawTo(sortedPoints[index - k]);
+            StdOut.print(" => " + sortedPoints[k]);
         }
         StdOut.println();
     }
@@ -18,45 +17,47 @@ public class Fast {
         In file = new In(args[0]);
         int n = file.readInt();
         Point[] pSort = new Point[n];
-        Point[] pIter = new Point[n];
         for (int i = 0; i < n; i++) {
             Point point = new Point(file.readInt(), file.readInt());
             point.draw();
-            pIter[i] = point;
             pSort[i] = point;
         }
-
-        Arrays.sort(pIter);
+        Arrays.sort(pSort);
         for (int i = 0; i < n; i++) {
-            pIter[i].index = i;
+            pSort[i].index = i;
         }
 
-        for (int i = 0; i < n; i++) {
-            Arrays.sort(pSort, pIter[i].SLOPE_ORDER);
-            StdOut.println("i = " + i + " " + "[" + pIter[i].index + "]" + pIter[i]);
+        for (int i = 0; i < n - 1; i++) {
+            Point[] collinearPoints = new Point[n - (i + 1)];
+            int initialIndex = i + 1;
+            for (int j = initialIndex; j < n; j++) {
+                collinearPoints[j - initialIndex] = pSort[j];
+            }
 
-            double slope = pIter[i].slopeTo(pSort[1]);
-            double newSlope = slope;
-            int count = 1;
-            StdOut.println("   mj = " + 1 + " slope=[" + slope + "," + newSlope + "] " + "[" + pSort[1].index + "]" + pSort[1]);
+            Arrays.sort(collinearPoints, pSort[i].SLOPE_ORDER);
+            StdOut.println("i = " + i + " " + "[" + pSort[i].index + "]" + pSort[i]);
 
-            for (int j = 2; j < n; j++) {
-                newSlope = pIter[i].slopeTo(pSort[j]);
-                StdOut.println("    j = " + j + " slope=[" + slope + "," + newSlope + "] " + "[" + pSort[j].index + "]" + pSort[j]);
+            double slope = pSort[i].slopeTo(collinearPoints[0]);
+            double newSlope;
+            int count = 0;
 
-                if (newSlope == slope && pSort[j].index > i) {
+            for (int j = 0; j < collinearPoints.length; j++) {
+                newSlope = pSort[i].slopeTo(collinearPoints[j]);
+                StdOut.println("    j = " + j + " slope=[" + slope + "," + newSlope + "] " + "[" + collinearPoints[j].index + "]" + collinearPoints[j]);
+                if (newSlope == slope) {
                     count++;
                 }
 
-                if (count >= 3 && (newSlope != slope || j == n - 1)) {
-                    StdOut.println("        DRAW!");
+                if (count >= 3 && (newSlope != slope || j == collinearPoints.length - 1)) {
+                    StdOut.println("        DRAW! " + count);
+
                     int endIndex;
                     if (newSlope != slope) {
                         endIndex = j - 1;
                     } else {
                         endIndex = j;
                     }
-                    drawCollinear(endIndex, count, pIter[i], pSort);
+                    drawCollinear(endIndex, count, pSort[i], collinearPoints);
                     count = 1;
                     slope = newSlope;
                 }

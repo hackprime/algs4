@@ -17,10 +17,9 @@ public class Point implements Comparable<Point> {
         public int compare(Point a, Point b) {
             double slopeToA = slopeTo(a);
             double slopeToB = slopeTo(b);
-            // StdOut.println("~~" + slopeToA + " " + slopeToB);
             if (slopeToA < slopeToB)      return -1;
             else if (slopeToA > slopeToB) return 1;
-            else                          return 0;
+            else                          return a.compareTo(b);
         }
     }
 
