@@ -6,6 +6,7 @@ public class Point implements Comparable<Point> {
 
     private final int x;
     private final int y;
+    public int index;
 
     public Point(int x, int y) {
         this.x = x;

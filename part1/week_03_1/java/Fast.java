@@ -1,6 +1,16 @@
 import java.util.Arrays;
 
 public class Fast {
+    public static void drawCollinear(int endIndex, int count, Point point, Point[] sortedPoints) {
+        Point[] resPoints = new Point[count];
+        for (int k = endIndex - count + 1; k <= endIndex; k++) {
+            ////////////////////////////
+            point.drawTo(sortedPoints[k]);
+            StdOut.print(" --> " + sortedPoints[k]);
+        }
+        StdOut.println();
+    }
+
     public static void main(String[] args) {
         StdDraw.setScale(0, 32768);
         StdDraw.setPenColor(StdDraw.BOOK_RED);
@@ -17,24 +27,39 @@ public class Fast {
         }
 
         Arrays.sort(pIter);
+        for (int i = 0; i < n; i++) {
+            pIter[i].index = i;
+        }
 
         for (int i = 0; i < n; i++) {
             Arrays.sort(pSort, pIter[i].SLOPE_ORDER);
-            double slope = pIter[i].slopeTo(pSort[1]);
-            int j;
-            for (j = 1; j < n; j++) {
-                if (slope != pIter[i].slopeTo(pSort[j])) {
-                    break;
-                }
-            }
+            StdOut.println("i = " + i + " " + "[" + pIter[i].index + "]" + pIter[i]);
 
-            if (--j >= 3) {
-                StdOut.print(pIter[i]);
-                for (int k = 1; k <= j; k++) {
-                    pIter[i].drawTo(pSort[k]);
-                    StdOut.print(" --> " + pSort[k]);
+            double slope = pIter[i].slopeTo(pSort[1]);
+            double newSlope = slope;
+            int count = 1;
+            StdOut.println("   mj = " + 1 + " slope=[" + slope + "," + newSlope + "] " + "[" + pSort[1].index + "]" + pSort[1]);
+
+            for (int j = 2; j < n; j++) {
+                newSlope = pIter[i].slopeTo(pSort[j]);
+                StdOut.println("    j = " + j + " slope=[" + slope + "," + newSlope + "] " + "[" + pSort[j].index + "]" + pSort[j]);
+
+                if (newSlope == slope && pSort[j].index > i) {
+                    count++;
                 }
-                StdOut.println();
+
+                if (count >= 3 && (newSlope != slope || j == n - 1)) {
+                    StdOut.println("        DRAW!");
+                    int endIndex;
+                    if (newSlope != slope) {
+                        endIndex = j - 1;
+                    } else {
+                        endIndex = j;
+                    }
+                    drawCollinear(endIndex, count, pIter[i], pSort);
+                    count = 1;
+                    slope = newSlope;
+                }
             }
         }
     }
