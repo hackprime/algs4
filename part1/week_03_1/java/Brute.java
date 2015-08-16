@@ -25,12 +25,13 @@ public class Brute {
                     for (int l = k+1; l < n; l++) {
                         double slopeL = p[i].slopeTo(p[l]);
 
-                        if (slopeJ == slopeK && slopeK == slopeL &&
-                                slopeL != Double.NEGATIVE_INFINITY) {
+                        if (slopeJ == slopeK && slopeK == slopeL
+                                && slopeL != Double.NEGATIVE_INFINITY) {
                             p[i].drawTo(p[j]);
-                            p[i].drawTo(p[k]);
-                            p[i].drawTo(p[l]);
-                            StdOut.println(p[i] + " --> " + p[j] + " --> " + p[k] + " --> " + p[l]);
+                            p[j].drawTo(p[k]);
+                            p[k].drawTo(p[l]);
+                            StdOut.println(p[i] + " -> " + p[j]
+                                           + " -> " + p[k] + " -> " + p[l]);
                         }
                     }
                 }
