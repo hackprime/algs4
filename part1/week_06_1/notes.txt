@@ -1,63 +1,206 @@
 11.1 HASH FUNCTIONS (18:13)
 
-.
+Hashing:
+- save items in key-indexed table
+- hash function - method for computing array index from key
 
----
+Hash function
+- efficient computing
+- each table indexes  equally likely for each key
 
+~equally likely [равновозможный, равновероятный]
+
+Collision: hash function produces the same index for two distinct keys
 
 
 11.2 SEPARATE CHAINING (7:28)
 
-.
+Separate chaining - collision resolution strategy
 
+Solution: use an array of M < N linked lists (chains)
+- Hash: map key to integer i between 0 and M-1
+- Insert: put at front of i-th chain (if not already there)
+- search: need to search only i-th chain
 ---
 
 
 
 11.3 LINEAR PROBING (14:37)
 
-.
+Linear probing (open adressing) - collision resolution strategy
+Idea: when a new key collides - find next empty slot and put it there
 
----
+- Hash: map key to integer i between 0 and M-1
+- Insert: put at tableindex i if free; if not - try i+1, i+2, ...
+- Search: search table index i; if occupied but not match - try i+1, i+2, ...
+Note: array size M MUST BE greather than number of key-value pairs N
+
+It's like searching for parking place
+Knuth's parking problem:
+- Cars arives at one-way street with N parking places
+- Each car desires a random place i;
+- if space i is taken - try i+1, i+2, ...
+
+    &
+  * *** * **
+-------------
+displacement of car "&" equals 3
+
+Half-full: with M/2 cars, mean displacement ~3/2
+Full: with M cars, mean displacement ~sqrt(pi*m / 8)
+
+Number of probes (under uniform hashing assumption):
+
+N = alpha M
+
+search hit:  ~ 1/2 (1 + 1/(1-alpha))
+search miss: ~ 1/2 (1 + 1/(1-alpha)^2)
+
+M too tlarge - too many empty array entries
+M too small - search time blows up
+typical choice - alpha = N/M ~ 1/2
+    - probes for search hit is about 3/2
+    - probes for search miss is about 5/2
 
 
 
 11.4 HASH TABLE CONTEXT (10:09)
 
-.
+Separate chaining:
+- easier to implement delete
+- performance degrades gracefuly
+- clustering less sensitive to poorly-designed hash-function
 
----
+Linear probing:
+- less wasted space
+- better cache performance
 
+Hash table vs BST
+    Hash table
+    - simple to code
+    - no efficient alternatives for unordered keys
+    - faster for simple keys (a few arithmetic ops verss log N compares)
 
-
-11.5 SYMBOL TABLE APPLICATIONS - SETS (05:04)
-
-.
-
----
-
-
-
-11.6 SYMBOL TABLE APPLICATIONS - DICTIONARY CLIENTS (05:40)
-
-.
-
----
-
-
-
-11.7 SYMBOL TABLE APPLICATIONS - INDEXING CLIENTS (08:57)
-
-.
-
----
+    BST
+    - stronger performance guarantee
+    - support for ordered ST operations
 
 
 
-11.8 SYMBOL TABLE APPLICATIONS - SPARSE VECTORS (07:41)
+EXERCISE 1
+(seed = 674591)
+Insert the following sequence of 12 keys into a separate-chaining hash table with 3 chains:
 
-.
+key  hash
+---  ----
+ A    2
+ O    1
+ L    1
+ F    1
+ N    0
+ X    1
+ D    2
+ E    0
+ R    1
+ Q    0
+ K    0
+ U    1
 
----
+
+Consider a search hit for the key A, whose hash value is 2.
+What is the sequence of keys that get compared with A?
+Answer for Question 1
+You entered:
+
+Your Answer     Score   Explanation
+D A Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+The correct answer is: D A
+
+Here is the separate-chaining hash table after inserting the 12 keys:
+
+0:  K -> Q -> E -> N
+1:  U -> R -> X -> F -> L -> O
+2:  D -> A
 
 
+
+EXERCISE 2
+(seed = 464231)
+Give the array that results after inserting the following sequence of 10 keys
+into an initially empty linear-probing hash table.
+
+key  hash
+---  ----
+ U    5
+ Z    0
+ M    7
+ B    6
+ E    9
+ C    7
+ Q    1
+ L    6
+ A    5
+ K    5
+
+Assume that the size of the hash table is 10 and that it neither grows nor shrink.
+Answer for Question 2
+You entered:
+
+Your Answer     Score   Explanation
+Z Q L A K U B M C E Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+The correct answer is: Z Q L A K U B M C E
+
+Here is the array immediately after each insertion:
+
+U:  - - - - - U - - - -
+Z:  Z - - - - U - - - -
+M:  Z - - - - U - M - -
+B:  Z - - - - U B M - -
+E:  Z - - - - U B M - E
+C:  Z - - - - U B M C E
+Q:  Z Q - - - U B M C E
+L:  Z Q L - - U B M C E
+A:  Z Q L A - U B M C E
+K:  Z Q L A K U B M C E
+
+
+
+EXERCISE 3
+(seed = 714983)
+Suppose that the following keys are inserted into an initially empty linear-probing hash table
+but not necessarily in the order given:
+
+key  hash
+---  ----
+ A    2
+ B    3
+ C    4
+ E    6
+ G    1
+ I    3
+ J    4
+
+Assuming that the size of the hash table is 7 and that it does not grow or shrink,
+which one or more of the following could be the contents of the resulting array?
+Your Answer     Score   Explanation
+
+[V] E I A B C J G
+Inorrect    0.00
+
+[X] B C G A J I E
+Correct 0.20
+
+[V] E G A B I C J
+Correct 0.20    G B A I C J E
+
+[V] I G A B C J E
+Correct 0.20    C J E B G A I
+
+[X] C B G E A J I
+Correct 0.20    No key is in preferred position.
