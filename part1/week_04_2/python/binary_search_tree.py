@@ -1,12 +1,14 @@
 #!/usr/local/bin/python
 # encoding: utf-8
 
+
 import os
 import sys
-QUEUE_DIR = os.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                    'week_02_1/python')
-sys.path.append(QUEUE_DIR)
+from collections import deque, OrderedDict
 
+QUEUE_DIR = os.path.join(os.path.dirname(os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__)))), 'week_02_1/python')
+sys.path.append(QUEUE_DIR)
 from queue import ResizableAtrrayQueue as Queue
 
 
@@ -17,19 +19,50 @@ class Node(object):
     right = None
     count = None
 
-    def __init__(self, key, value):
+    def __init__(self, key, value=None):
         self.key = key
         self.value = value
+        self.count = 0
 
 
 class BinarySearchTree(object):
     root = None
     _keys = []
 
-    def put(self, key, value):
-        self.root = self.root._put(key, value, self.root)
+    @classmethod
+    def from_lot(cls, keys, values=None):
+        if not keys:
+            return
+        if isinstance(keys, OrderedDict):
+            keys, values = keys.keys(), keys.values()
+        elif not values:
+            values = [None] * len(keys)
+        tree = cls()
+        for k, v in zip(keys, values):
+            tree.put(k, v)
+        return tree
 
-    def _put(self, key, value, node=None):
+    def as_lot(self):
+        tree_lot = []
+        if not self.root:
+            return tree_lot
+        current_level, next_level = deque(), deque()
+        current_level.append(self.root)
+
+        while current_level:
+            current_node = current_level.popleft()
+            if current_node:
+                tree_lot.append(current_node.key)
+                next_level.append(current_node.left)
+                next_level.append(current_node.right)
+            if not current_level:
+                current_level, next_level = next_level, current_level
+        return tree_lot
+
+    def put(self, key, value=None):
+        self.root = self._put(key, value, self.root)
+
+    def _put(self, key, value=None, node=None):
         if node is None:
             return Node(key, value)
         if key < node.key:
@@ -39,7 +72,7 @@ class BinarySearchTree(object):
         else:
             node.value = value
 
-        node.count = 1 + self.size(node.left) + self.size(node.right)
+        node.count = 1 + self._size(node.left) + self._size(node.right)
 
         return node
 
@@ -53,9 +86,6 @@ class BinarySearchTree(object):
             else:
                 return current.value
         return None
-
-    def delete(self, key):
-        pass
 
     def floor(self, key):
         node = self._floor(key, self.root)
@@ -129,7 +159,7 @@ class BinarySearchTree(object):
     def delete(self, key):
         self.root = self._delete(key, self.root)
 
-    def delete(self, key, node):
+    def _delete(self, key, node):
         if node is None:
             return None
         if key < node.key:
@@ -159,69 +189,8 @@ class BinarySearchTree(object):
 #     def __unicode__(self):
 #         return self.as_string()
 
-
-def test():
-    keys = 'S E A R C H E X A M P L E'.split()
-    values = range(13)
-
-    st = SymbolTable()
-    for key, value in zip(keys, values):
-        st.put(key, value)
-
-    assert st.keys() == sorted(keys), st.keys()
-#     # print 'insert done'
-
-#     maximum = h.del_max()
-#     assert unicode(h) == 'S P R N H O A E I G', h
-#     assert maximum == 'T', maximum
-#     # print 'del max done'
-
-#     maximum = h.del_max()
-#     assert unicode(h) == 'R P O N H G A E I', h
-#     assert maximum == 'S', maximum
-#     # print 'del max done'
-
-#     h.insert('S')
-#     assert unicode(h) == 'S R O N P G A E I H', h
-#     # print 'insert done'
-
-
-def frequency_counter(data, min_len, cls):
-    st = SymbolTable()
-
-    while not st.is_empty():
-        word = data.pop()
-        if len(word) < min_len:
-            continue
-
-        if st.contains(word):
-            st.put(word, 1)
-        else:
-            st.put(word, st.get(word) + 1)
-
-    max_word = ''
-    st.put(max_word, 0)
-
-    for word in st.keys():
-        if st.get(word) > st.get(max_word):
-            max_word = word
-
-    return "%s:%s" % (max_word, st.get(max_word))
-
-
 if __name__ == '__main__':
-    test()
-
-    frequency_counter()
-
-#     h = Heap()
-#     h.data_from_string('91 72 65 71 51 12 22 52 57 33'.split())
-#     for c in '50 41 83'.split():
-#         h.insert(c)
-#     print unicode(h)
-
-#     h = Heap()
-#     h.data_from_string('96 90 93 87 16 10 22 26 60 14'.split())
-#     for x in xrange(3):
-#         h.del_max()
-#     print unicode(h)
+    inp = map(int, '64 55 89 50 63 76 96 28 74 81'.split())
+    bst = BinarySearchTree.from_lot(inp)
+    res = bst.as_lot()
+    print res == inp, res
