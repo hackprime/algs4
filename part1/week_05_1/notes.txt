@@ -148,3 +148,128 @@ Optimization: Always kepp root page in memory
 
 
 
+EXERSICE 1
+
+(seed = 41546)
+Consider the left-leaning red-black BST whose level-order traversal is:
+
+    59 31 80 23 45 75 84 21 24 35 71 81 14
+
+List (in ascending order) the keys in the red nodes. A node is red if the link
+from its parent is red.
+Answer for Question 1
+You entered:
+
+Your Answer   Score Explanation
+23 35 71 81 14  Incorrect 0.00
+Total   0.00 / 1.00
+Question Explanation
+
+The correct answer is: 14 23 35 71 81
+
+The shape of a BST is uniquely determined by its level-order traversal.
+
+To deduce which links are red, recall that the length of every path from the root to a
+null link has the same number of black links; apply this property starting from nodes
+at the bottom.
+
+
+
+EXERSICE 2
+
+(seed = 553435)
+Consider the left-leaning red-black BST whose level-order traversal is
+
+    64 55 89 50 63 76 96 28 74 81          ( red links = 28 76 )
+
+What is the level-order traversal of the red-black BST that results after
+inserting the following sequence of keys:
+
+    62 85 43
+Answer for Question 2
+You entered:
+
+Your Answer   Score Explanation
+64 55 89 43 63 76 96 28 50 62 74 85 81  Correct 1.00
+Total   1.00 / 1.00
+Question Explanation
+
+The correct answer is: 64 55 89 43 63 76 96 28 50 62 74 85 81
+
+Here is the level-order traversal of the red-black BST after each insertion:
+
+    64 55 89 50 63 76 96 28 74 81          ( red links = 28 76 )
+62: 64 55 89 50 63 76 96 28 62 74 81       ( red links = 28 62 76 )
+85: 64 55 89 50 63 76 96 28 62 74 85 81    ( red links = 28 62 76 81 )
+43: 64 55 89 43 63 76 96 28 50 62 74 85 81 ( red links = 43 62 76 81 )
+
+
+
+EXERSICE 3
+
+(seed = 128068)
+Which of the following statements about balanced search trees are true? Check all that apply. Unless otherwise specified, assume that the 2-3 tree and red-black BSTs are as described in lecture (e.g., 2-3 trees are perfectly balanced and red-black BST are left-leaning red-black BSTs with internal links colored either red or black).
+Your Answer   Score Explanation
+
+[V] The maximum height of a 2-3 tree with N keys is ~ lg N.
+Correct 0.20  The maximum height is floor(lg N), when all nodes are 2-nodes.
+
+[V] It is possible to implement the left (or right) rotation operations in a BST in constant time.
+Correct 0.20  A left or right rotation changes only a constant number of pointers.
+
+[X] The order of growth of the minimum number of nodes in a red-black BST of height h is 2^(h/2).
+Inorrect  0.00  This is a bit tricky. Consider a 2-3 tree of height h with 3-nodes on the leftmost spine and 2-nodes everywhere else. The number of nodes is 1 + 3 + 7 + ... + (2^(h+1) - 1) = 2^(h+2) - h - 3. This corresponds to a red-black BST with 2^(h+2) - 3 nodes and height 2h.
+
+[X] A height-balanced BST is a binary search tree in which the height of any two siblings differ by at most 1. In a height-balanced BST on N nodes, the height is logarithmic in N.
+Inorrect  0.00  These are also known as AVL trees. Since AVL trees are binary trees, the height is at least ~ lg N. Let N(h) be the minimum number of nodes in an AVL tree of height h. Then, N(h) satisfies N(h) = 1 + N(h-1) + N(h-2) >= 2N(h-2). Thus, N(h) >= 2^(h/2), or equivalently, h
+
+[X] The subtree rooted at any node of a 2-3 tree is itself a 2-3 tree.
+Inorrect  0.00  It satisfies symmetric order and perfect balance.
+
+
+[V] The number of structurally different red-black BSTs (with respect to tree shape and link colors) containing 6 keys is 4.
+Inorrect  0.00  The number is 3. Consider the corresponding 2-3 trees: The root is a 3-node and exactly one of its three children is a 3-node.
+
+[V] The maximum height of a 2-3 tree with N keys is ~ log_3 N.
+Inorrect  0.00  The maximum height is floor(lg N), when all nodes are 2-nodes.
+
+[V] In a red-black BST on N nodes, the search and insert operations take logarithmic time in the worst case.
+Correct 0.20  In the worst case, each of these operations takes time proportional to the height of the tree, which is logarithmic in N.
+
+[V] Consider inserting N keys in ascending order into an initially empty red-black BST. Then, each insertion triggers at most 1 rotation (left or right).
+Correct 0.20  Each insert performs 1 left rotation and no right rotations, except when N is one less than a power of 2 (in which case it performs no rotations).
+
+[X] Given a red-black BST on N nodes, the maximum decrease in height after inserting a key is ~ lg N.
+Inorrect  0.00  Consider inserting N = 2^n - 2 keys in decreasing order. The height is ~ 2 lg N. After inserting a key smaller than any of the first N keys, the height decreases to ~ lg N.
+
+
+[X] Consider inserting N distinct keys into an initially empty red-black BST. Then, in the worst case, the total number of rotations is linearithmic in N.
+Correct 0.20  This is a tricky one. We show that the number of rotations is at most 3N. First we claim that the total number of color flips is at most N: Each insertion (other than the first one) colors one link red and then performs rotations and color flips to restore the red-black BST invariants; rotations do not change the number of red links; each color flip decreases the number of red links by 1 (typical case) or by 2 (if performed at the root). During an insert operation, after any two consecutive rotation operations, there is a color flip.
+
+[V] Consider inserting N keys in ascending order into an initially empty red-black BST. Then, after each insertion, the height of the tree either strictly increases or remains unchanged.
+Correct 0.20  The BST remains perfectly balanced - after the ith insertion, its height is exactly floor(lg i), which is a monotonically nodecreasing function of i.
+
+[X] Suppose that some unsuccessful search in a red-black BST terminates after 20 compares. Then, any unsuccessful search performs at least 11 compares.
+Correct 0.20  In the extreme case, the links alternate between red and black (starting and ending with red, not including the null link) and the black height is 9. Any unsuccessful search traces a path from the root to a null link; there are exactly 9 black links (not including the null link) along such a path. If the path contains no red links, then it contains only 10 nodes (and makes only 10 compares).
+
+[X] A weight-balanced BST is a binary serach tree in which for each node the number of nodes in its left subtree is at least half and at most twice the number of nodes in its right subtree. In a weight-balanced BST on N nodes, the height is logarithmic in N.
+Inorrect  0.00  The minimum height occurs when the tree is perfectly balanced, in which case the height is ~ lg N. Let H(N) be the the maximum height of a weight-balanced BST on N nodes. Then, the larger subtree contains at most two-thirds of the nodes. Thus, H(N) satisfies the recurrence H(N) = H(2N/3) + 1, whose solution is H(N) ~ log_(3/2) N.
+
+[X] It is possible to construct a red-black BST from a sorted array of N distinct keys in linear time.
+Inorrect  0.00  Create a perfectly balanced BST by choosing the (upper) median key to be the root and recursively construct a perfectly balanced BST in each subtree. The resulting tree can be (uniquely) colored to make it a red-black BST. One way to see how is to color every link in the bottommost level red so that the red-black BST has perfect black balance. Note that since we use the upper median (instead of the lower median), whenever there is a right-leaning link that is red, the sibling left-leaning link will also be red. Now, repeatedly apply color flip operations until there are no more right-leaning red links.
+
+
+[V] Consider inserting N keys in ascending order into an initially empty red-black BST. Then, after each insertion, the height of the tree either strictly increases or remains unchanged.
+Correct 0.20  The BST remains perfectly balanced - after the ith insertion, its height is exactly floor(lg i), which is a monotonically nodecreasing function of i.
+
+[V] Given a red-black BST, it is possible to change the colors of some of the links and produce a different red-black BST.
+Inorrect  0.00  The colors of the links in a red-black BST are uniquely determined by the shape of the tree.
+
+[V] Consider two paths from the root to a null link in a red-black BST on N nodes. Then, the maximum difference in the length of the two paths is ~ lg N.
+Correct 0.20  The extreme case occurs when the length of one path is ~ lg N and the length of the other path is ~ 2 lg N.
+
+[X] Let x and y be two sibling nodes in a red-black BST. Then, the black height of the subtree rooted at x equals the black height of the subtree rooted at y.
+Correct 0.20  If the link between x and its parent is red, then the black height of the subtree rooted at x will be one less than the black height of the subtree rooted at y.
+
+[V] Consider two paths from the root to a null link in a red-black BST on N nodes. Then, the maximum difference in the length of the two paths is a constant.
+Correct 0.20  The extreme case occurs when the length of one path is ~ lg N and the length of the other path is ~ 2 lg N.
