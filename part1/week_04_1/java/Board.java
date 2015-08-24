@@ -1,3 +1,6 @@
+import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.StdOut;
+
 public class Board {
     private int[][] blocks;
     private int N;
@@ -6,7 +9,12 @@ public class Board {
         // construct a board from an N-by-N array of blocks
         // (where blocks[i][j] = block in row i, column j)
         N = blocks.length;
-        this.blocks = blocks;
+        this.blocks = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                this.blocks[i][j] = blocks[i][j];
+            }
+        }
     }
 
     public int dimension() {
@@ -18,7 +26,8 @@ public class Board {
         int hamming = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if (blocks[i][j] != targetValue(i, j)) {
+                int value = targetValue(i, j);
+                if (value != 0 && blocks[i][j] != targetValue(i, j)) {
                     hamming += 1;
                 }
             }
@@ -31,6 +40,9 @@ public class Board {
         int manhattan = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
+                if (blocks[i][j] == 0) {
+                    continue;
+                }
                 int[] place = targetPlace(blocks[i][j]);
                 manhattan += Math.abs(place[0] - i) + Math.abs(place[1] - j);
             }
@@ -74,7 +86,29 @@ public class Board {
 
     public boolean equals(Object y) {
         // does this board equal y?
-        return this.toString() == y.toString();
+        if (y == null) {
+            return false;
+        }
+        if (y == this) {
+            return true;
+        }
+        if (y.getClass() != this.getClass()) {
+            return false;
+        }
+        Board yBoard = (Board) y;
+
+        if (yBoard.blocks.length != N) {
+            return false;
+        }
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (this.blocks[i][j] != yBoard.blocks[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public Iterable<Board> neighbors() {
@@ -124,20 +158,20 @@ public class Board {
         return stack;
     }
 
-    private int[][] copy(int[][] blocks) {
-        int[][] copyBlocks = new int[blocks.length][blocks.length];
+    private int[][] copy(int[][] srcBlocks) {
+        int[][] copyBlocks = new int[srcBlocks.length][srcBlocks.length];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                copyBlocks[i][j] = blocks[i][j];
+                copyBlocks[i][j] = srcBlocks[i][j];
             }
         }
         return copyBlocks;
     }
 
-    private void swap(int[][] blocks, int i1, int j1, int i2, int j2) {
-        int tmp = blocks[i1][j1];
-        blocks[i1][j1] = blocks[i2][j2];
-        blocks[i2][j2] = tmp;
+    private void swap(int[][] srcBlocks, int i1, int j1, int i2, int j2) {
+        int tmp = srcBlocks[i1][j1];
+        srcBlocks[i1][j1] = srcBlocks[i2][j2];
+        srcBlocks[i2][j2] = tmp;
     }
 
     public String toString() {
@@ -161,7 +195,8 @@ public class Board {
             for (int j = 0; j < b.N; j++) {
                 int targetValue = b.targetValue(i, j);
                 int[] targetPlace = b.targetPlace(targetValue);
-                StdOut.println(targetValue + " -> " + targetPlace[0] + "," + targetPlace[1]);
+                StdOut.println(targetValue + " -> " + targetPlace[0] + ","
+                               + targetPlace[1]);
             }
         }
 
