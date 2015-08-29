@@ -13,9 +13,10 @@ public class KdTree {
         private int n;        // the right/top subtree
         private boolean vertical;        // the right/top subtree
 
-        public Node(Point2D p, int n, boolean vertical) {
+        public Node(Point2D p, int n, boolean vertical, RectHV rect) {
             this.p = p;
             this.n = n;
+            this.rect = rect;
             this.vertical = vertical;
         }
     }
@@ -50,24 +51,68 @@ public class KdTree {
         if (p == null) {
             return;
         }
-        root = insert(root, p, false);
+        root = insert(root, p, true, null);
     }
 
-    private Node insert(Node x, Point2D p, boolean vertical) {
-        if (x == null) {
-            return new Node(p, 1, true);
+    private Node insert(Node x, Point2D p, boolean vertical, RectHV rect) {
+        if (rect == null) {
+            rect = new RectHV(0, 0, 1, 1);
         }
-        int cmp = p.compareTo(x.p);
-        if (cmp < 0) {
-            x.lb = insert(x.lb,  p, !vertical);
-        } else if (cmp > 0) {
-            x.rt = insert(x.rt, p, !vertical);
+        if (x == null) {
+            drawLine(p, rect, vertical);
+            return new Node(p, 1, vertical, rect);
+        }
+        boolean cmp;
+        if (vertical == true) {
+            cmp = p.x() < x.p.x();
         } else {
-            x.vertical = vertical;
-            x.p = p;
+            cmp = p.y() < x.p.y();
+        }
+        RectHV nextRect;
+        if (cmp == true) {
+            StdOut.println("left");
+            if (x.lb == null) {
+                double x1 = rect.xmin();
+                double y1 = rect.ymin();
+                double x2 = vertical ? x.p.x() : rect.xmax();
+                double y2 = vertical ? rect.ymax() : x.p.y();
+                StdOut.println(x1 + " - " + y1 + " - " + x2 + " - " + y2);
+                nextRect = new RectHV(x1, y1, x2, y2);
+            } else {
+                nextRect = x.lb.rect;
+            }
+            x.lb = insert(x.lb,  p, !vertical, nextRect);
+        } else {
+            StdOut.println("right");
+            if (x.rt == null) {
+                double x1 = vertical ? x.p.x() : rect.xmin();
+                double y1 = vertical ? rect.ymin() : x.p.y();
+                double x2 = rect.xmax();
+                double y2 = rect.ymax();
+                nextRect = new RectHV(x1, y1, x2, y2);
+            } else {
+                nextRect = x.rt.rect;
+            }
+            x.rt = insert(x.rt, p, !vertical, nextRect);
         }
         x.n = 1 + size(x.lb) + size(x.rt);
         return x;
+    }
+
+    private void drawLine(Point2D p, RectHV rect, boolean vertical) {
+        StdOut.println(size() + ": " + p.toString() + " - " + rect.toString() + " - " + vertical);
+        try {
+            Thread.sleep(1000);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        if (vertical) {
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.line(p.x(), rect.ymin(), p.x(), rect.ymax());
+        } else {
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.line(rect.xmin(), p.y(), rect.xmax(), p.y());
+        }
     }
 
     public boolean contains(Point2D p) {
@@ -100,17 +145,8 @@ public class KdTree {
         }
         draw(node.lb);
         draw(node.rt);
-        StdOut.println(node.p.toString());
         node.p.draw();
     }
-
-    // public Iterable<Point2D> range(RectHV rect) {
-    //     // all points that are inside the rectangle
-    //     StdDraw.setPenColor(StdDraw.RED);
-    //     StdDraw.setPenColor(StdDraw.BLUE);
-    //     Queue<Point2D> queue = new Queue<Point2D>();
-    //     return queue
-    // }
 
     public Iterable<Point2D> range(RectHV rect) {
         Queue<Point2D> points = new Queue<Point2D>();
@@ -130,9 +166,29 @@ public class KdTree {
         return points;
     }
 
-    // public Point2D nearest(Point2D p) {
-    //     // a nearest neighbor in the set to point p; null if the set is empty
-    // }
+    public Point2D nearest(Point2D p) {
+        // a nearest neighbor in the set to point p; null if the set is empty
+        Point2D champion = null;
+        double championDistance = Double.POSITIVE_INFINITY;
+        Queue<Point2D> points = new Queue<Point2D>();
+        Queue<Node> queue = new Queue<Node>();
+        queue.enqueue(root);
+        while (!queue.isEmpty()) {
+            Node x = queue.dequeue();
+            if (x == null) {
+                continue;
+            }
+            double distance = p.distanceTo(x.p);
+            if (distance < championDistance) {
+                champion = x.p;
+                championDistance = distance;
+            }
+            queue.enqueue(x.lb);
+            queue.enqueue(x.rt);
+        }
+        return champion;
+
+    }
 
     public static void main(String[] args) {
         KdTree tree = new KdTree();
@@ -152,26 +208,26 @@ public class KdTree {
         }
         StdOut.println("Size: " + tree.size());
         StdOut.println("Is empty: " + tree.isEmpty());
-        tree.draw();
+        // tree.draw();
 
         Point2D point = new Point2D(0.5, 1.0);
         StdOut.println("tree contains " + point.toString() + ": " + tree.contains(point));
 
-        StdDraw.setPenRadius();
+        // StdDraw.setPenRadius();
 
         RectHV rect = new RectHV(0.0, 0.0, 0.5, 0.5);
-        rect.draw();
+        // rect.draw();
         StdOut.println("Points in rectangle " + rect.toString() + ":");
         for (Point2D p : tree.range(rect)) {
             StdOut.println(p.toString());
         }
         StdOut.println("-");
 
-        // Point2D point = new Point2D(0.1, 0.1);
+        Point2D nearPoint = new Point2D(0.1, 0.1);
         // point.draw();
-        // StdOut.println("The nearest point to point " + point.toString() + ": ");
-        // StdOut.println(tree.nearest(point).toString());
-        // StdOut.println("-");
+        StdOut.println("The nearest point to point " + nearPoint.toString() + ": ");
+        StdOut.println(tree.nearest(nearPoint).toString());
+        StdOut.println("-");
 
     }
 }
