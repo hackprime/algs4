@@ -58,9 +58,12 @@ public class KdTree {
 
     private Node insert(Node x, Point2D p, boolean vertical, RectHV rect) {
         if (x == null) {
-            drawLine(p, rect, vertical);
             return new Node(p, 1, vertical, rect);
         }
+        if (x.p.equals(p)) {
+            return x;
+        }
+
         boolean cmp;
         if (vertical) {
             cmp = p.x() < x.p.x();
@@ -108,16 +111,6 @@ public class KdTree {
         return x;
     }
 
-    private void drawLine(Point2D p, RectHV rect, boolean vertical) {
-        if (vertical) {
-            StdDraw.setPenColor(StdDraw.RED);
-            StdDraw.line(p.x(), rect.ymin(), p.x(), rect.ymax());
-        } else {
-            StdDraw.setPenColor(StdDraw.BLUE);
-            StdDraw.line(rect.xmin(), p.y(), rect.xmax(), p.y());
-        }
-    }
-
     public boolean contains(Point2D p) {
         // does the set contain point p?
         if (p == null) {
@@ -148,20 +141,29 @@ public class KdTree {
 
     public void draw() {
         // draw all points to standard draw
-        draw(root);
+        draw(root, true);
     }
 
-    private void draw(Node node) {
-        if (node == null) {
+    private void draw(Node x, boolean vertical) {
+        if (x == null) {
             throw new java.lang.NullPointerException();
         }
-        if (node.lb != null) {
-            draw(node.lb);
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(.01);
+        x.p.draw();
+        if (vertical) {
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.line(x.p.x(), x.rect.ymin(), x.p.x(), x.rect.ymax());
+        } else {
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.line(x.rect.xmin(), x.p.y(), x.rect.xmax(), x.p.y());
         }
-        if (node.rt != null) {
-            draw(node.rt);
+        if (x.lb != null) {
+            draw(x.lb, !vertical);
         }
-        node.p.draw();
+        if (x.rt != null) {
+            draw(x.rt, !vertical);
+        }
     }
 
     public Iterable<Point2D> range(RectHV rect) {
@@ -233,7 +235,7 @@ public class KdTree {
         }
         StdOut.println("Size: " + tree.size());
         StdOut.println("Is empty: " + tree.isEmpty());
-        // tree.draw();
+        tree.draw();
 
         Point2D point = new Point2D(0.5, 1.0);
         StdOut.println("tree contains " + point.toString() + ": "
