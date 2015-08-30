@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.In;
 
@@ -34,11 +35,17 @@ public class PointSET {
 
     public void insert(Point2D p) {
         // add the point to the set (if it is not already in the set)
+        if (p == null) {
+            throw new java.lang.NullPointerException();
+        }
         set.add(p);
     }
 
     public boolean contains(Point2D p) {
         // does the set contain point p?
+        if (p == null) {
+            throw new java.lang.NullPointerException();
+        }
         return set.contains((Object) p);
     }
 
@@ -51,6 +58,9 @@ public class PointSET {
 
     public Iterable<Point2D> range(RectHV rect) {
         // all points that are inside the rectangle
+        if (rect == null) {
+            throw new java.lang.NullPointerException();
+        }
         Queue<Point2D> queue = new Queue<Point2D>();
         for (Point2D p : set) {
             if (rect.contains(p)) {
@@ -62,6 +72,9 @@ public class PointSET {
 
     public Point2D nearest(Point2D p) {
         // a nearest neighbor in the set to point p; null if the set is empty
+        if (p == null) {
+            throw new java.lang.NullPointerException();
+        }
         Point2D nearest = null;
         double shortestDistance = Double.POSITIVE_INFINITY;
         for (Point2D point : set) {
