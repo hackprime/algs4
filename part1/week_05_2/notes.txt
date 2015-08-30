@@ -319,3 +319,145 @@ Implementation: sweep-line algorythm
 Sparse matrix-vector multiplacation
 sparse mitrix  - matrix that contains very low count of non-zero elements
 ====================================
+
+
+
+EXERCISE 1
+
+(seed = 236124)
+Suppose that you run the orthogonal line segment intersection algorithm from lecture
+on the following set of segments:
+
+A ( 3,  2)  ->  ( 9,  2)  [ horizontal ]
+B ( 7, 13)  ->  ( 7, 17)  [ vertical   ]
+C (14,  7)  ->  (17,  7)  [ horizontal ]
+D (13,  5)  ->  (19,  5)  [ horizontal ]
+E (15,  9)  ->  (15, 16)  [ vertical   ]
+F ( 5,  6)  ->  (11,  6)  [ horizontal ]
+G ( 6, 15)  ->  (10, 15)  [ horizontal ]
+H ( 2, 12)  ->  (16, 12)  [ horizontal ]
+
+
+Give the horizontal line segments in the BST (sorted in increasing order of y-coordinate) just before
+the sweep-line algorithm processes the vertical line segment B.
+
+Your answer should be a sequence of uppercase letters, separated by whitespace.
+Answer for Question 1
+You entered:
+
+Your Answer     Score   Explanation
+H A F G Incorrect   0.00
+Total       0.00 / 1.00
+Question Explanation
+
+The correct answer is: A F H G
+
+Here are the sweep line events (sorted by x-coordinate):
+
+H A F G B A G F D C E H C D
+
+Here is a trace of the sweep-line algorithm after each event.
+  *  Horizontal segment (left  endpoint): display BST (sorted by y-coordinate) after adding line segment.
+  *  Horizontal segment (right endpoint): display BST (sorted by y-coordinate) after removing line segment.
+  *  Vertical segment: display result of range search.
+
+H:  H
+A:  A H
+F:  A F H
+G:  A F H G
+B:  range search [ intersects G ]
+A:  F H G
+G:  F H
+F:  H
+D:  D H
+C:  D C H
+E:  range search [ intersects H ]
+H:  D C
+C:  D
+D:
+
+
+
+EXERCISE 2
+
+(seed = 87971)
+What is the level-order traversal of the kd-tree that results after inserting
+the following sequence of points into an initially empty tree?
+
+A (0.37, 0.46)
+B (0.35, 0.10)
+C (0.97, 0.65)
+D (0.34, 0.56)
+E (0.49, 0.38)
+F (0.73, 0.81)
+G (0.67, 0.79)
+H (0.65, 0.58)
+
+Your answer should be a sequence of uppercase letters, starting with A and separated by whitespace.
+
+Recall that our convention is to subdivide the region using the x-coordinate at even levels
+(including the root) and using the y-coordinate at odd levels. Also, we use the left subtree
+for points with smaller x- or y-coordinates.
+Answer for Question 2
+You entered:
+
+Your Answer     Score   Explanation
+A B C D E F H G Correct 1.00
+Total       1.00 / 1.00
+Question Explanation
+
+The correct answer is: A B C D E F H G
+
+Here is the level-order traversal of the kd-tree after each insertion:
+
+A:  A
+B:  A B
+C:  A B C
+D:  A B C D
+E:  A B C D E
+F:  A B C D E F
+G:  A B C D E F G
+H:  A B C D E F H G
+
+
+
+EXERCISE 3
+
+(seed = 870601)
+Consider an interval search tree containing the set of 8 intervals
+
+A [32, 38]
+B [16, 39]
+C [21, 37]
+D [28, 36]
+E [ 0, 10]
+F [30, 35]
+G [22, 34]
+H [24, 40]
+
+and whose level-order traversal is:  A B E C D G F H.
+
+Suppose that you use the search algorithm described in lecture to search for
+any *one* interval that intersects [13, 15]. What is the sequence of
+intervals in the tree that are checked for intersection with the query interval?
+
+Your answer should be a sequence of uppercase letters, starting with A, separated by whitespace.
+Answer for Question 3
+You entered:
+
+Your Answer     Score   Explanation
+A B E   Incorrect   0.00
+Total       0.00 / 1.00
+Question Explanation
+
+The correct answer is: A B C D G H
+
+Here is a trace of the interval intersection query for [13, 15]:
+
+A: go left  (because max endpoint in left subtree >= 13)
+B: go right (because max endpoint in left subtree <  13)
+C: go right (becaue left subtree is empty)
+D: go left  (because max endpoint in left subtree >= 13)
+G: go right (becaue left subtree is empty)
+H: go right (becaue left subtree is empty)
+no intersection
