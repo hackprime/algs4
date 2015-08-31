@@ -24,6 +24,7 @@ public class KdTree {
 
     private Node root = null;
     private RectHV plain;
+    private int count;
 
     public KdTree() {
         // construct an empty set of points
@@ -37,15 +38,7 @@ public class KdTree {
 
     public int size() {
         // number of points in the set
-        return size(root);
-    }
-
-    private int size(Node x) {
-        if (x == null) {
-            return 0;
-        } else {
-            return x.n;
-        }
+        return count;
     }
 
     public void insert(Point2D p) {
@@ -58,6 +51,7 @@ public class KdTree {
 
     private Node insert(Node x, Point2D p, boolean vertical, RectHV rect) {
         if (x == null) {
+            count++;
             return new Node(p, 1, vertical, rect);
         }
         if (x.p.equals(p)) {
@@ -88,7 +82,6 @@ public class KdTree {
                 nextRect = x.lb.rect;
             }
             x.lb = insert(x.lb,  p, !vertical, nextRect);
-            x.n = 1 + size(x.lb) + size(x.rt);
         } else {
             if (x.rt == null) {
                 double x1, y1;
@@ -106,7 +99,6 @@ public class KdTree {
                 nextRect = x.rt.rect;
             }
             x.rt = insert(x.rt, p, !vertical, nextRect);
-            x.n = 1 + size(x.lb) + size(x.rt);
         }
         return x;
     }
